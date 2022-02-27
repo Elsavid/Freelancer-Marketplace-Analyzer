@@ -6,23 +6,52 @@ The overall goal is to develop a web application that can analyze the content on
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. Below instructions are tested on macOS 11.6
 
 ### Prerequisites
-
+- Java 8 or 11, since Play only supports [Java 8 or 11](https://www.playframework.com/documentation/2.8.x/Requirements)
+- sbt
 
 ### Installing
+#### Java 11
+- Your system probably has pre-installed Java, check which Java version is installed, you can run following command
+```
+$ /usr/libexec/java_home -V
+```
+- If you don't have Java 11, you need to install it. In order to manage multiple Java versions and easily switch between them, I use jEnv. Other similar tool, such as SDKMAN, should also work. Follow jEnv [setup page](https://www.jenv.be/) and use it to configure java version to 11.
+- In the end, you should output following:
+```
+$ java --version
+openjdk version "11.0.14.1" 2022-02-08
+OpenJDK Runtime Environment Temurin-11.0.14.1+1 (build 11.0.14.1+1)
+OpenJDK 64-Bit Server VM Temurin-11.0.14.1+1 (build 11.0.14.1+1, mixed mode)
+```
+#### sbt
+You can choose to install sbt on your machine by
+```
+$ brew install sbt
+```
+or
+
+Using the sbt inside the project, so you can skip sbt installation
+
+No matter how you plan to use sbt, proper Java version is required
+
+### IDE Setup
+You can continue to setup your preferred IDE by following [documentation](https://www.playframework.com/documentation/2.8.x/IDE). Please add any IDE configuration files to .gitignore.
+
+
+## Running locally
+Navigate to project folder, run `sbt run`. After the message `Server started, ...` displays, enter the following URL in a browser: <http://localhost:9000>
 
 
 ## Running the tests
 
 Explain how to run the automated tests for this system
 
-
 ## Built With
 
 * [Play](https://www.playframework.com/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
 
 ## Authors
 

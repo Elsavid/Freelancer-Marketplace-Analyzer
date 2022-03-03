@@ -1,4 +1,4 @@
-name := """FreeLanceLot"""
+name := """SOEN6441"""
 organization := "com.example"
 
 version := "1.0-SNAPSHOT"

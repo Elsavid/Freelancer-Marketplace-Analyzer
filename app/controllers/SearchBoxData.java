@@ -4,9 +4,6 @@ public class SearchBoxData {
     @Constraints.Required
     private String terms;
 
-    public SearchBoxData(String terms) {
-        this.terms = terms;
-    }
 
     public String getTerms() {
         return terms;

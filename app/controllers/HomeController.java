@@ -1,7 +1,6 @@
 package controllers;
 
 import models.Project;
-import models.SearchBox;
 import play.data.FormFactory;
 import play.i18n.MessagesApi;
 import play.mvc.Http;
@@ -17,7 +16,7 @@ import java.util.concurrent.CompletionStage;
 import static play.libs.Scala.asScala;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 /**
  * This controller contains an action to handle HTTP requests
  * to the application's home page.
@@ -32,11 +31,13 @@ public class HomeController extends Controller {
 
 
     @Inject
-    public HomeController(FormFactory formFactory, MessagesApi messagesApi){
+    public HomeController(FormFactory formFactory, MessagesApi messagesApi,ApiService apiService){
         this.form=formFactory.form(SearchBoxData.class);
         this.messagesApi=messagesApi;
+        this.apiService=apiService;
         this.projects=new ArrayList<>();
-    }
+        };
+
 
     /**
      * An action that renders an HTML page with a welcome message.
@@ -44,47 +45,33 @@ public class HomeController extends Controller {
      * this method will be called when the application receives a
      * <code>GET</code> request with a path of <code>/</code>.
      */
-    public Result index() {
-        return ok(views.html.index.render());
+
+
+    public CompletionStage<Result> freeLancelot(Http.Request request){
+        return supplyAsync(()->{
+            return ok(views.html.freelancelot.render(asScala(projects),form,request,messagesApi.preferred(request)));
+        });
     }
-    
-    public Result explore() {
-        return ok(views.html.explore.render());
-    }
-    
-    public Result tutorial() {
-        return ok(views.html.tutorial.render());
+    public CompletionStage<Result> listProjects(Http.Request request){
+        return supplyAsync(()->{
+            return ok(views.html.freelancelot.render(asScala(projects),form,request,messagesApi.preferred(request)));
+        });
     }
 
-    public Result freeLancelot(Http.Request request){
-        return ok(views.html.freelancelot.render(asScala(projects),form,request,messagesApi.preferred(request)));
-    }
-    public Result listProjects(Http.Request request){
-        return ok(views.html.freelancelot.render(asScala(projects),form,request,messagesApi.preferred(request)));
-    }
-
-    public Result search(Http.Request request){
+    public CompletionStage<Result> search(Http.Request request){
         final Form<SearchBoxData> boundForm=form.bindFromRequest(request);
         if(boundForm.hasErrors()){
-            return badRequest(views.html.freelancelot.render(asScala(projects),form,request,messagesApi.preferred(request)));
+            return supplyAsync(()->{
+                return badRequest(views.html.freelancelot.render(asScala(projects),form,request,messagesApi.preferred(request)));
+            });
         }
         else{
             SearchBoxData data=boundForm.get();
-            projects.addAll(apiService.find(data));
-            return redirect(routes.HomeController.listProjects()).flashing("info","New Search Results!");
+            return apiService.find(data).thenApply(p->{
+                projects.addAll(p);
+                return redirect(routes.HomeController.listProjects()).flashing("info","New Search Results!");
+            });
         }
     }
-
-//    public Result javascriptRoutes(Http.Request request) {
-//        return ok(JavaScriptReverseRouter.create(
-//                "jsRoutes",
-//                "jQuery.ajax",
-//                request.host(),
-//                routes.javascript.HomeController.freeLancelot(),
-//                routes.javascript.HomeController.list(),
-//                routes.javascript.HomeController.index()))
-//                .as(Http.MimeTypes.JAVASCRIPT);
-//    }
-
 
 }

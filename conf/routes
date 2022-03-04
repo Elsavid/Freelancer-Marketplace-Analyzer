@@ -3,9 +3,7 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
-GET    /explore                     controllers.HomeController.explore
-GET    /tutorial                    controllers.HomeController.tutorial
+GET     /                           controllers.HomeController.freeLancelot(request: Request)
 GET    /freelancelot                controllers.HomeController.freeLancelot(request: Request)
 GET    /listProjects                controllers.HomeController.listProjects(request: Request)
 GET    /search                      controllers.HomeController.search(request: Request)

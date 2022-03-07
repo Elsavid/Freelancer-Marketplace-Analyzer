@@ -48,6 +48,10 @@ public class SearchActor extends AbstractActor {
         CompletionStage<List<Project>> projectList = apiService.getProjects(searchBox.getKeywords());
 
         // when list of project is received, convert to json and return
+        convertToJson(projectList);
+    }
+
+    private void convertToJson(CompletionStage<List<Project>> projectList) {
         projectList.thenAcceptAsync(res -> {
             if (!res.isEmpty()) {
                 res.forEach(r -> {

@@ -1,18 +1,19 @@
 package models;
 
 public class SearchBox {
-	private String keywords;
 
-	public SearchBox() {
+    private String keywords;
 
-	}
+    /**
+     * Default constructor
+     */
+    public SearchBox() {}
 
-	public String getKeywords() {
-		return keywords;
-	}
-
-	public void setKeywords(String keywords) {
-		this.keywords = keywords;
-	}
-
+    /**
+     * Getter for the keywords input in the search box
+     * @return
+     */
+    public String getKeywords() {
+        return keywords;
+    }
 }

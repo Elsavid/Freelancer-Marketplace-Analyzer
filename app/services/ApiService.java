@@ -36,6 +36,7 @@ public class ApiService {
 
         CompletionStage<JsonNode> jsonPromise = request.get()
                 .thenApply(r -> r.getBody(WSBodyReadables.instance.json()));
+        // TODO why double return?
         return jsonPromise.toCompletableFuture().thenApply(json -> {
             return json;
         });
@@ -53,6 +54,7 @@ public class ApiService {
                     p.addSkill(skill.get("name").asText());
                 }
                 projects.add(p);
+                // TODO Why return jsonPromise? How does it work?
             });
             return projects;
         });

@@ -29,3 +29,15 @@
 input:focus {
     outline: none !important;
 }
+
+.projectTable td {
+    text-align: center;
+}
+
+th {
+    padding: 2em;
+}
+
+.projectTitle {
+    text-align: left;
+}

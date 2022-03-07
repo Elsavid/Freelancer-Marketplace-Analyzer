@@ -24,7 +24,7 @@
         </section>
         <section>
             <div class="centeredBlock">
-                <table id="result">
+                <table id="result" class="projectTable">
                         <!-- Placeholder for result -->
                 </table>
             </div>
@@ -33,17 +33,24 @@
     <script>
             // Create WebSocket connection
             const ws = new WebSocket('ws://localhost:9000/ws');
+            var displayTableHeading = false;
 
             // Listen for message
             ws.addEventListener("message", function (event) {
                 console.log(event.data);
                 var i, len, ref, resp, row, skill, skillsContainer;
                 resp = JSON.parse(event.data);
+
+                // Display the heading of the result table if not yet displayed
+                if (!displayTableHeading) {
+                    $('#result').append('<thead><tr><th>Owner</th><th>Sumbit date</th><th>Title</th><th>Skills</th></tr></thead>');
+                    displayTableHeading = true;
+                }
                 // Create a row for a project
                 row = $('<tr/>');
                 row.append($('<td/>').append($('<a href="/owner/' + resp.owner_id + '">' + resp.owner_id + '</a>')));
                 row.append($('<td/>').append(resp.submitdate));
-                row.append($('<td/>').append(resp.title));
+                row.append($('<td/ class="projectTitle">').append(resp.title));
                 skillsContainer = $('<td/>').append($('<table style="border:none"/>').append($('<tr/>')));
                 ref = resp.skills;
                 for (let i = 0; i < ref.length; i++) {

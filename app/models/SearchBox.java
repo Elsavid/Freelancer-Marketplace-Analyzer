@@ -1,8 +1,18 @@
 package models;
 
 public class SearchBox {
-    public String terms;
-    public SearchBox(String terms){
-        this.terms=terms;
-    }
+	private String keywords;
+
+	public SearchBox() {
+
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
+
 }

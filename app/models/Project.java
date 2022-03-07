@@ -1,36 +1,45 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Project {
-    private long ownerId;
-    private Date timeSubmitted;
+    private String ownerId;
+    private String submitDate;
     private String title;
     private String type;
-    private String skills;
+    private ArrayList<String> skills;
 
-    public Project(long ownerId,Date timeSubmitted,String title,String type,String skills){
-        this.ownerId=ownerId;
-        this.timeSubmitted=timeSubmitted;
-        this.title=title;
-        this.type=type;
-        this.skills=skills;
+    public Project() {
+        this.ownerId = "";
+        this.submitDate = null;
+        this.title = "";
+        this.type = "";
+        this.skills = new ArrayList<>();
     }
 
-    public long getOwnerId() {
+    public Project(String ownerId, String submitDate, String title, String type, ArrayList<String> skills) {
+        this.ownerId = ownerId;
+        this.submitDate = submitDate;
+        this.title = title;
+        this.type = type;
+        this.skills = skills;
+    }
+
+    public String getOwnerId() {
         return ownerId;
     }
 
-    public void setOwnerId(long ownerId) {
+    public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
     }
 
-    public Date getTimeSubmitted() {
-        return timeSubmitted;
+    public String getSubmitDate() {
+        return submitDate;
     }
 
-    public void setTimeSubmitted(Date timeSubmitted) {
-        this.timeSubmitted = timeSubmitted;
+    public void setSubmitDate(String submitDate) {
+        this.submitDate = submitDate;
     }
 
     public String getTitle() {
@@ -49,11 +58,15 @@ public class Project {
         this.type = type;
     }
 
-    public String getSkills() {
+    public ArrayList<String> getSkills() {
         return skills;
     }
 
-    public void setSkills(String skills) {
+    public void setSkills(ArrayList<String> skills) {
         this.skills = skills;
+    }
+
+    public void addSkill(String skill) {
+        this.skills.add(skill);
     }
 }

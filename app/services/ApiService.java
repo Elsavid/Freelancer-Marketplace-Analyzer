@@ -1,53 +1,61 @@
 package services;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import play.libs.Json;
-import controllers.SearchBoxData;
-import models.Project;
-import play.libs.concurrent.HttpExecutionContext;
-import javax.inject.Inject;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import play.libs.ws.*;
 
+import javax.inject.Inject;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import models.Project;
+import play.libs.ws.WSBodyReadables;
+import play.libs.ws.WSClient;
+import play.libs.ws.WSRequest;
 
 public class ApiService {
 
-    private final HttpExecutionContext ec;
-    private final WSClient ws;
-
-
-
     @Inject
-    public ApiService(HttpExecutionContext ec, WSClient ws) {
-        this.ec = ec;
-        this.ws = ws;
+    WSClient ws;
+
+    public static String listProjects = "https://www.freelancer.com/api/projects/0.1/projects/active?limit=10&job_details=true";
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    public CompletionStage<List<Project>> getProjects(String query) {
+        CompletableFuture<Object> resp = sendRequest(listProjects + "&query=\"" + query + "\"");
+        CompletionStage<List<Project>> projectList = processProjectResponse(resp);
+        return projectList;
     }
 
+    public CompletableFuture<Object> sendRequest(String url) {
+        System.out.println("[debug] sending request: " + url);
+        WSRequest request = ws.url(url);
 
-    public CompletionStage<List<Project>> find(SearchBoxData data){
-        String terms=data.getTerms();
-        WSRequest request=ws.url("https://www.freelancer.com/api/projects/0.1/projects/active/?compact=&limit=10")
-                //.addHeader("freelancer-oauth-v1", "pJnj6xksLHRoLew53Rpmcy6f191LNT")
-                //.setRequestTimeout(Duration.of(1000, ChronoUnit.MILLIS))
-                .addQueryParameter("query", terms);
-        CompletionStage<JsonNode> jsonPromise=request.get().thenApply(r->r.getBody(WSBodyReadables.instance.json()));
-        //get data from jsonPromise, then inject it to objects
-        return jsonPromise.thenApply(j->{
-            List<Project> projects=new ArrayList<>();
-            if(j.findPath("status").textValue().equals("success")){
-                // here to parse the json j and give it to projects, you can write another function to implement it
+        CompletionStage<JsonNode> jsonPromise = request.get()
+                .thenApply(r -> r.getBody(WSBodyReadables.instance.json()));
+        return jsonPromise.toCompletableFuture().thenApply(json -> {
+            return json;
+        });
+    }
 
-
-                // test case below(you can uncomment it and test it):
-                // projects.add(new Project(12232,new Date(System.currentTimeMillis()),j.findPath("status").textValue(),"job",j.findPath("status").textValue()));
-            }
+    public CompletionStage<List<Project>> processProjectResponse(CompletableFuture<Object> json) {
+        List<Project> projects = new ArrayList<>();
+        CompletionStage<List<Project>> jsonPromise = json.thenApply(response -> {
+            ((JsonNode) response).get("result").get("projects").forEach(item -> {
+                Project p = new Project();
+                p.setOwnerId(item.get("owner_id").asText());
+                p.setTitle(item.get("title").asText());
+                p.setSubmitDate(dateFormat.format(new Date(item.get("submitdate").asLong() * 1000L)));
+                for (JsonNode skill : item.get("jobs")) {
+                    p.addSkill(skill.get("name").asText());
+                }
+                projects.add(p);
+            });
             return projects;
         });
+        return jsonPromise;
     }
 }

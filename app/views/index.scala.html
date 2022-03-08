@@ -35,25 +35,32 @@
 <script>
     // Create WebSocket connection
     const ws = new WebSocket('ws://localhost:9000/ws');
-
+    var keywords;
     // Listen for message
     ws.addEventListener("message", function (event) {
         console.log(event.data);
-        var i, len, ref, resp, row, skill, skillsContainer;
+        var i, len, ref, resp, row, skill, skillsContainer, readability;
         resp = JSON.parse(event.data);
+        if(resp.flesch_index != null){
+            $('#result').append($('<a>' + ' Search terms: ' + keywords + ': Flesh Reading Ease Index ' + resp.flesch_index + ' FKGL ' + resp.FKGL + '</a>'));
+        }
         row = $('<tr/>');
         row.append($('<td/>').append($('<a href="/owner/' + resp.owner_id + '">' + resp.owner_id + '</a>')));
         row.append($('<td/>').append(resp.submitdate));
         row.append($('<td/>').append(resp.title));
         skillsContainer = $('<td/>').append($('<table style="border:none"/>').append($('<tr/>')));
+        readability = $('<td/>').append($('<a href="/readability/' + resp.preview_description + '" target="_blank">' + 'readability' + '</a>'));
         ref = resp.skills;
         for (let i = 0; i < ref.length; i++) {
             skill = ref[i];
             skillsContainer.append($('<tr />').append($('<td style="border:none">').append($('<a href="/skill/' + skill + '" style="text-decoration: none;" target="_blank">' + skill + '</a>'))));
         }
         row.append(skillsContainer);
+        row.append(readability);
         skillsContainer.append($('<hr />'));
+        //$('#result').append($('<a>' + 'Search terms:' + keywords + 'Flesh Reading Ease Index ' + resp.preview_description + 'FKGL' + resp.FKGL));
         $('#result').append(row);
+        document.getElementById("resultKeyWords").innerHTML = keywords;
     });
     $("#searchForm").submit(function (event) {
         console.log("submit: " + $("#searchKeyWords").val());
@@ -61,6 +68,7 @@
         ws.send(JSON.stringify({
             keywords: $("#searchKeyWords").val()
         }));
+        keywords = $("#searchKeyWords").val();
         return $("#searchKeyWords").val("");
     });
 

@@ -1,0 +1,15 @@
+@import play.mvc.Http.Request
+@(readability: Readability)(implicit request: Request)
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <div>
+            <li>Flesh Reading Ease Index: @readability.getFleschIndex</li>
+            <li>Education level: @readability.getEducationLevel</li>
+        </div>
+    </body>
+</html>

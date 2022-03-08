@@ -42,11 +42,9 @@
 
                 let resp = JSON.parse(event.data);
 
-                let keywords = resp.keywords;
                 let projects = resp["projects"];
 
-                let resultTable = $('<table><thead><tr><th>Owner</th><th>Sumbit date</th><th>Title</th><th>Skills</th></tr></thead>');
-
+                let resultTable = $('<table class="projectTable"><thead><tr><th>Owner</th><th>Sumbit date</th><th>Title</th><th>Skills</th></tr></thead>');
 
                 for (let key of Object.keys(projects)) {
 
@@ -68,7 +66,9 @@
 
                     resultTable.append(row);
                 }
-                resultTable.append($('</table>'))
+                resultTable.append($('</table>'));
+
+                $('#resultList').append($('<h3>Search results for keywords <a href="/keywords/" + resp.keywords>' + resp.keywords + '</a></h3>'));
                 $('#resultList').append(resultTable);
             });
 

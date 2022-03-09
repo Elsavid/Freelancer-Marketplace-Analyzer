@@ -40,6 +40,7 @@
     ws.addEventListener("message", function (event) {
         console.log(event.data);
         var i, len, ref, resp, row, skill, skillsContainer, readability;
+        //var url = encodeURIComponent('http://localhost:9000/readability/'+);
         resp = JSON.parse(event.data);
         if(resp.flesch_index != null){
             $('#result').append($('<a>' + ' Search terms: ' + keywords + ': Flesh Reading Ease Index ' + resp.flesch_index + ' FKGL ' + resp.FKGL + '</a>'));
@@ -49,7 +50,7 @@
         row.append($('<td/>').append(resp.submitdate));
         row.append($('<td/>').append(resp.title));
         skillsContainer = $('<td/>').append($('<table style="border:none"/>').append($('<tr/>')));
-        readability = $('<td/>').append($('<a href="/readability/' + resp.preview_description + '" target="_blank">' + 'readability' + '</a>'));
+        readability = $('<td/>').append($('<a href="/readability/' + encodeURIComponent(resp.preview_description) + '" target="_blank">' + 'readability' + '</a>'));
         ref = resp.skills;
         for (let i = 0; i < ref.length; i++) {
             skill = ref[i];

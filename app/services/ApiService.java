@@ -52,6 +52,7 @@ public class ApiService {
                 for (JsonNode skill : item.get("jobs")) {
                     p.addSkill(skill.get("name").asText());
                 }
+                p.setPreviewDescription(item.get("preview_description").asText());
                 projects.add(p);
             });
             return projects;

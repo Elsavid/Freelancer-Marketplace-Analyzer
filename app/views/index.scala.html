@@ -32,9 +32,12 @@
             </div>
         </section>
     </body>
+
     <script>
             // Create WebSocket connection
             const ws = new WebSocket('ws://localhost:9000/ws');
+
+            // var keywords;
 
             // Listen for message
             ws.addEventListener("message", function (event) {
@@ -63,15 +66,20 @@
                     }
                     row.append(skillsContainer);
                     skillsContainer.append($('<hr />'));
-
+                    let readability = $('<td/>').append($('<a href="/readability/' + encodeURIComponent(resp["preview_description"]) + '" target="_blank">' + 'Readability' + '</a>'));
+                    row.append(readability);
                     resultTable.append(row);
                 }
                 resultTable.append($('</table>'));
 
                 $('#resultList').append($('<h3>Search results for keywords <a href="/keywords/" + resp.keywords>' + resp.keywords + '</a></h3>'));
+
+                if (resp["flesch_index"] != null) {
+                    $('#resultList').append($('<h4>Flesh Reading Ease Index ' + resp["flesch_index"] + '& FKGL ' + resp["FKGL"] + '</h4>'));
+                }
+
                 $('#resultList').append(resultTable);
             });
-
 
             $("#searchForm").submit(function (event) {
                 console.log("submit: " + $("#searchKeyWords").val());
@@ -79,9 +87,9 @@
                 ws.send(JSON.stringify({
                     keywords: $("#searchKeyWords").val()
                 }));
+                //  keywords = $("#searchKeyWords").val();
                 return $("#searchKeyWords").val("");
             });
-
     </script>
 
 </html>

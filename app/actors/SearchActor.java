@@ -48,21 +48,42 @@ public class SearchActor extends AbstractActor {
         CompletionStage<List<Project>> projectList = apiService.getProjects(searchBox.getKeywords());
 
         // when list of project is received, convert to json and return
+        convertToJson(projectList, searchBox.getKeywords());
+    }
+
+    private void convertToJson(CompletionStage<List<Project>> projectList, String keywords) {
         projectList.thenAcceptAsync(res -> {
-            if (!res.isEmpty()) {
-                res.forEach(r -> {
-                    ObjectNode response = Json.newObject();
-                    response.put("owner_id", r.getOwnerId());
-                    response.put("title", r.getTitle());
-                    response.put("submitdate", r.getSubmitDate());
-                    ArrayNode skillArray = response.putArray("skills");
-                    for (String skill : r.getSkills()) {
-                        skillArray.add(skill);
+
+                    if (!res.isEmpty()) {
+
+                        ObjectNode response = Json.newObject();
+                        response.put("keywords", keywords);
+
+                        ObjectNode projects = Json.newObject();
+
+                        for (int i = 0; i < res.size(); i++) {
+
+                            Project projectObject = res.get(i);
+                            ObjectNode projectJson = Json.newObject();
+
+                            projectJson.put("owner_id", projectObject.getOwnerId());
+                            projectJson.put("title", projectObject.getTitle());
+                            projectJson.put("submitdate", projectObject.getSubmitDate());
+
+                            ArrayNode skillArray = projectJson.putArray("skills");
+                            for (String skill : projectObject.getSkills()) {
+                                skillArray.add(skill);
+                            }
+
+                            projects.set(String.valueOf(i), projectJson);
+                        }
+
+                        response.set("projects", projects);
+
+                        out.tell(response, self());
                     }
-                    out.tell(response, self());
-                });
-            }
-        });
+                }
+        );
     }
 
     @Override

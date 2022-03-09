@@ -1,33 +1,36 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Project {
+
+    private int id;
     private String ownerId;
     private String submitDate;
     private String title;
     private String type;
     private ArrayList<String> skills;
     private String previewDescription;
+    private Map<String, Long> wordStats;
 
     public Project() {
-        this.ownerId = "";
-        this.submitDate = null;
-        this.title = "";
-        this.type = "";
-        this.skills = new ArrayList<>();
-        this.previewDescription = "";
+        this(0,"",null,"","",new ArrayList<>(),"");
     }
 
-    public Project(String ownerId, String submitDate, String title, String type, ArrayList<String> skills, String previewDescription) {
+    public Project(int id, String ownerId, String submitDate, String title, String type, ArrayList<String> skills, String previewDescription) {
+        this.id = id;
         this.ownerId = ownerId;
         this.submitDate = submitDate;
         this.title = title;
         this.type = type;
         this.skills = skills;
         this.previewDescription = previewDescription;
+        this.wordStats = new HashMap<>();
     }
+
+    public int getId() { return id; }
 
     public String getOwnerId() {
         return ownerId;
@@ -77,7 +80,7 @@ public class Project {
         return previewDescription;
     }
 
-    public void setPreviewDescription(String previewDescription) {
-        this.previewDescription = previewDescription;
-    }
+    public Map<String, Long> getWordStats() { return wordStats; }
+
+    public void setWordStats(Map<String, Long> wordStats) { this.wordStats = wordStats; }
 }

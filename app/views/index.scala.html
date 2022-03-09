@@ -35,19 +35,14 @@
 
     <script>
             // Create WebSocket connection
-            const ws = new WebSocket('ws://localhost:9000/ws');
-
-            // var keywords;
+            const searchSocket = new WebSocket('ws://localhost:9000/searchSocket');
 
             // Listen for message
-            ws.addEventListener("message", function (event) {
-                console.log(event.data);
+            searchSocket.addEventListener("message", function (event) {
 
                 let resp = JSON.parse(event.data);
-
                 let projects = resp["projects"];
-
-                let resultTable = $('<table class="projectTable"><thead><tr><th>Owner</th><th>Sumbit date</th><th>Title</th><th>Skills</th></tr></thead>');
+                let resultTable = $('<table class="projectTable"><thead><tr><th>Owner</th><th>Submit date</th><th>Title</th><th>Skills</th><th>Word statistics</th></tr></thead>');
 
                 for (let key of Object.keys(projects)) {
 
@@ -58,15 +53,26 @@
                     row.append($('<td/>').append($('<a href="/owner/' + project.owner_id + '">' + project.owner_id + '</a>')));
                     row.append($('<td/>').append(project.submitdate));
                     row.append($('<td/ class="projectTitle">').append(project.title));
+
                     let skillsContainer = $('<td/>').append($('<table style="border:none"/>').append($('<tr/>')));
                     let ref = project.skills;
                     for (let i = 0; i < ref.length; i++) {
                         let skill = ref[i];
                         skillsContainer.append($('<tr/>').append($('<td style="border:none">').append($('<a href="/skill/' + skill + '" style="text-decoration: none;" target="_blank">' + skill + '</a>'))));
                     }
+
+                    let statsContainer = $('<td/>').append($('<table style="border:none"/>').append($('<tr/>')));
+                    let stats = project["stats"];
+                    for (let i = 0; i < stats.length; i++) {
+                        let word = stats[i];
+                        statsContainer.append($('<tr/>').append($('<td style="border:none">').append($('<a href="/stats/' + word + '" style="text-decoration: none;" target="_blank">' + word + '</a>'))));
+                    }
+
                     row.append(skillsContainer);
+                    row.append(statsContainer);
+
                     skillsContainer.append($('<hr />'));
-                    let readability = $('<td/>').append($('<a href="/readability/' + encodeURIComponent(resp["preview_description"]) + '" target="_blank">' + 'Readability' + '</a>'));
+                    let readability = $('<td/>').append($('<a href="/readability/' + encodeURIComponent(project["preview_description"]) + '" target="_blank">' + 'Readability' + '</a>'));
                     row.append(readability);
                     resultTable.append(row);
                 }
@@ -75,7 +81,7 @@
                 $('#resultList').append($('<h3>Search results for keywords <a href="/keywords/" + resp.keywords>' + resp.keywords + '</a></h3>'));
 
                 if (resp["flesch_index"] != null) {
-                    $('#resultList').append($('<h4>Flesh Reading Ease Index ' + resp["flesch_index"] + '& FKGL ' + resp["FKGL"] + '</h4>'));
+                    $('#resultList').append($('<h4>Flesh Reading Ease Index ' + resp["flesch_index"] + ' & FKGL ' + resp["FKGL"] + '</h4>'));
                 }
 
                 $('#resultList').append(resultTable);
@@ -84,10 +90,9 @@
             $("#searchForm").submit(function (event) {
                 console.log("submit: " + $("#searchKeyWords").val());
                 event.preventDefault();
-                ws.send(JSON.stringify({
+                searchSocket.send(JSON.stringify({
                     keywords: $("#searchKeyWords").val()
                 }));
-                //  keywords = $("#searchKeyWords").val();
                 return $("#searchKeyWords").val("");
             });
     </script>

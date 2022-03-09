@@ -14,9 +14,8 @@ import play.mvc.Result;
 import play.mvc.WebSocket;
 import services.ApiService;
 import play.libs.ws.WSClient;
-import play.libs.ws.WSRequest;
 import services.ReadabilityService;
-import static play.libs.Scala.asScala;
+
 /**
  * This controller contains an action to handle HTTP requests
  * to the application's home page.
@@ -44,12 +43,12 @@ public class HomeController extends Controller {
         return ok(views.html.index.render(request));
     }
 
-    public WebSocket ws() {
+    public WebSocket searchSocket() {
         return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> SearchActor.props(out, apiService, readabilityService),
                 actorSystem, materializer));
     }
 
-    public Result readability(Http.Request request, String input){
+    public Result readability(Http.Request request, String input) {
         return ok(views.html.readability.render(readabilityService.getReadability(input), request));
     }
 

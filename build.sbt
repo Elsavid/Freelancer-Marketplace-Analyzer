@@ -1,4 +1,4 @@
-name := """FreeLanceLot"""
+name := """SOEN6441"""
 organization := "com.example"
 
 version := "1.0-SNAPSHOT"
@@ -17,10 +17,6 @@ javaOptions in Test ++= Seq(
   "-Xss1M",
   "-XX:MaxPermSize=384M"
 )
-
-// To enable HTTP requests
-libraryDependencies += ws
-libraryDependencies += ehcache
 
 // Compile the project before generating Eclipse files, so
 // that generated .scala or .class files for views and routes are present

@@ -9,6 +9,7 @@ public class Project {
     private String title;
     private String type;
     private ArrayList<String> skills;
+    private String previewDescription;
 
     public Project() {
         this.ownerId = "";
@@ -16,14 +17,16 @@ public class Project {
         this.title = "";
         this.type = "";
         this.skills = new ArrayList<>();
+        this.previewDescription = "";
     }
 
-    public Project(String ownerId, String submitDate, String title, String type, ArrayList<String> skills) {
+    public Project(String ownerId, String submitDate, String title, String type, ArrayList<String> skills, String previewDescription) {
         this.ownerId = ownerId;
         this.submitDate = submitDate;
         this.title = title;
         this.type = type;
         this.skills = skills;
+        this.previewDescription = previewDescription;
     }
 
     public String getOwnerId() {
@@ -68,5 +71,13 @@ public class Project {
 
     public void addSkill(String skill) {
         this.skills.add(skill);
+    }
+
+    public String getPreviewDescription() {
+        return previewDescription;
+    }
+
+    public void setPreviewDescription(String previewDescription) {
+        this.previewDescription = previewDescription;
     }
 }

@@ -1,5 +1,6 @@
 package actors;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 
@@ -16,10 +17,13 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import models.AverageReadability;
 import models.Project;
+import models.Readability;
 import models.SearchBox;
 import play.libs.Json;
 import services.ApiService;
+import services.ReadabilityService;
 
 public class SearchActor extends AbstractActor {
 
@@ -27,15 +31,17 @@ public class SearchActor extends AbstractActor {
     private final ActorRef out;
     String query;
     ApiService apiService;
+    ReadabilityService readabilityService;
 
-    public static Props props(ActorRef out, ApiService apiService) {
-        return Props.create(SearchActor.class, out, apiService);
+    public static Props props(ActorRef out, ApiService apiService,ReadabilityService readabilityService) {
+        return Props.create(SearchActor.class, out, apiService, readabilityService);
     }
 
     @Inject
-    public SearchActor(ActorRef out, ApiService apiService) {
+    public SearchActor(ActorRef out, ApiService apiService, ReadabilityService readabilityService) {
         this.out = out;
         this.apiService = apiService;
+        this.readabilityService = readabilityService;
         logger.info("New Search Actor for WebSocket {}", out);
     }
 
@@ -46,6 +52,7 @@ public class SearchActor extends AbstractActor {
 
         // api service sends http request
         CompletionStage<List<Project>> projectList = apiService.getProjects(searchBox.getKeywords());
+        // readability service computes the metrics
 
         // when list of project is received, convert to json and return
         convertToJson(projectList, searchBox.getKeywords());
@@ -53,11 +60,14 @@ public class SearchActor extends AbstractActor {
 
     private void convertToJson(CompletionStage<List<Project>> projectList, String keywords) {
         projectList.thenAcceptAsync(res -> {
-
                     if (!res.isEmpty()) {
 
                         ObjectNode response = Json.newObject();
                         response.put("keywords", keywords);
+
+                        AverageReadability averageReadability = readabilityService.getAvgReadability(res);
+                        response.put("flesch_index", averageReadability.getFleschIndex());
+                        response.put("FKGL", averageReadability.getFKGL());
 
                         ObjectNode projects = Json.newObject();
 
@@ -74,6 +84,8 @@ public class SearchActor extends AbstractActor {
                             for (String skill : projectObject.getSkills()) {
                                 skillArray.add(skill);
                             }
+
+                            projectJson.put("preview_description", projectObject.getPreviewDescription());
 
                             projects.set(String.valueOf(i), projectJson);
                         }

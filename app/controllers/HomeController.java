@@ -1,22 +1,25 @@
 package controllers;
 
+import java.util.List;
+import java.util.concurrent.CompletionStage;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import actors.SearchActor;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
+import models.Project;
 import play.cache.AsyncCacheApi;
 import play.libs.streams.ActorFlow;
+import play.libs.ws.WSClient;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.WebSocket;
 import services.ApiService;
-import play.libs.ws.WSClient;
-import play.libs.ws.WSRequest;
 import services.ReadabilityService;
-import static play.libs.Scala.asScala;
+
 /**
  * This controller contains an action to handle HTTP requests
  * to the application's home page.
@@ -45,11 +48,29 @@ public class HomeController extends Controller {
     }
 
     public WebSocket ws() {
-        return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> SearchActor.props(out, apiService, readabilityService),
-                actorSystem, materializer));
+        return WebSocket.Json
+                .accept(request -> ActorFlow.actorRef(out -> SearchActor.props(out, apiService, readabilityService),
+                        actorSystem, materializer));
     }
 
-    public Result readability(Http.Request request, String input){
+    /**
+     * 
+     * @author Yan Ren
+     * @param skill
+     * @return
+     */
+    public CompletionStage<Result> skill(String skill) {
+        CompletionStage<List<Project>> projectList = apiService.getSkill(skill);
+        return projectList.toCompletableFuture().thenApplyAsync(projects -> {
+            if (!projects.isEmpty()) {
+                return ok(views.html.skill.render(projects));
+            }
+
+            return ok("not found");
+        });
+    }
+
+    public Result readability(Http.Request request, String input) {
         return ok(views.html.readability.render(readabilityService.getReadability(input), request));
     }
 

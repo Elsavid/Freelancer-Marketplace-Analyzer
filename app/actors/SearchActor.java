@@ -21,6 +21,7 @@ import models.AverageReadability;
 import models.Project;
 import models.Readability;
 import models.SearchBox;
+import models.Skill;
 import play.libs.Json;
 import services.ApiService;
 import services.ReadabilityService;
@@ -33,7 +34,7 @@ public class SearchActor extends AbstractActor {
     ApiService apiService;
     ReadabilityService readabilityService;
 
-    public static Props props(ActorRef out, ApiService apiService,ReadabilityService readabilityService) {
+    public static Props props(ActorRef out, ApiService apiService, ReadabilityService readabilityService) {
         return Props.create(SearchActor.class, out, apiService, readabilityService);
     }
 
@@ -60,42 +61,44 @@ public class SearchActor extends AbstractActor {
 
     private void convertToJson(CompletionStage<List<Project>> projectList, String keywords) {
         projectList.thenAcceptAsync(res -> {
-                    if (!res.isEmpty()) {
+            if (!res.isEmpty()) {
 
-                        ObjectNode response = Json.newObject();
-                        response.put("keywords", keywords);
+                ObjectNode response = Json.newObject();
+                response.put("keywords", keywords);
 
-                        AverageReadability averageReadability = readabilityService.getAvgReadability(res);
-                        response.put("flesch_index", averageReadability.getFleschIndex());
-                        response.put("FKGL", averageReadability.getFKGL());
+                AverageReadability averageReadability = readabilityService.getAvgReadability(res);
+                response.put("flesch_index", averageReadability.getFleschIndex());
+                response.put("FKGL", averageReadability.getFKGL());
 
-                        ObjectNode projects = Json.newObject();
+                ObjectNode projects = Json.newObject();
 
-                        for (int i = 0; i < res.size(); i++) {
+                for (int i = 0; i < res.size(); i++) {
 
-                            Project projectObject = res.get(i);
-                            ObjectNode projectJson = Json.newObject();
+                    Project projectObject = res.get(i);
+                    ObjectNode projectJson = Json.newObject();
 
-                            projectJson.put("owner_id", projectObject.getOwnerId());
-                            projectJson.put("title", projectObject.getTitle());
-                            projectJson.put("submitdate", projectObject.getSubmitDate());
+                    projectJson.put("owner_id", projectObject.getOwnerId());
+                    projectJson.put("title", projectObject.getTitle());
+                    projectJson.put("submitdate", projectObject.getSubmitDate());
 
-                            ArrayNode skillArray = projectJson.putArray("skills");
-                            for (String skill : projectObject.getSkills()) {
-                                skillArray.add(skill);
-                            }
-
-                            projectJson.put("preview_description", projectObject.getPreviewDescription());
-
-                            projects.set(String.valueOf(i), projectJson);
-                        }
-
-                        response.set("projects", projects);
-
-                        out.tell(response, self());
+                    ArrayNode skillArray = projectJson.putArray("skills");
+                    for (Skill s : projectObject.getSkills()) {
+                        ObjectNode skill = Json.newObject();
+                        skill.put("id", s.getId());
+                        skill.put("name", s.getName());
+                        skillArray.add(skill);
                     }
+
+                    projectJson.put("preview_description", projectObject.getPreviewDescription());
+
+                    projects.set(String.valueOf(i), projectJson);
                 }
-        );
+
+                response.set("projects", projects);
+
+                out.tell(response, self());
+            }
+        });
     }
 
     @Override

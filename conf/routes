@@ -4,9 +4,10 @@
 
 # Home page with project search request result
 GET    /                           controllers.HomeController.index(request: Request)
-# GET    /listProjects                controllers.HomeController.listProjects(request: Request)
 GET    /ws                      controllers.HomeController.ws
 GET    /readability/:input             controllers.HomeController.readability(request: Request, input: String)
+GET    /skill/:skill         controllers.HomeController.skill(skill: String)
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

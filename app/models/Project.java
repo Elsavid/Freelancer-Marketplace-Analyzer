@@ -1,14 +1,13 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Project {
     private String ownerId;
     private String submitDate;
     private String title;
     private String type;
-    private ArrayList<String> skills;
+    private ArrayList<Skill> skills;
     private String previewDescription;
 
     public Project() {
@@ -20,7 +19,8 @@ public class Project {
         this.previewDescription = "";
     }
 
-    public Project(String ownerId, String submitDate, String title, String type, ArrayList<String> skills, String previewDescription) {
+    public Project(String ownerId, String submitDate, String title, String type, ArrayList<Skill> skills,
+            String previewDescription) {
         this.ownerId = ownerId;
         this.submitDate = submitDate;
         this.title = title;
@@ -61,15 +61,15 @@ public class Project {
         this.type = type;
     }
 
-    public ArrayList<String> getSkills() {
+    public ArrayList<Skill> getSkills() {
         return skills;
     }
 
-    public void setSkills(ArrayList<String> skills) {
+    public void setSkills(ArrayList<Skill> skills) {
         this.skills = skills;
     }
 
-    public void addSkill(String skill) {
+    public void addSkill(Skill skill) {
         this.skills.add(skill);
     }
 

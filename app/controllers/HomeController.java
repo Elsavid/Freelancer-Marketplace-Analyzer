@@ -47,10 +47,9 @@ public class HomeController extends Controller {
         return ok(views.html.index.render(request));
     }
 
-    public WebSocket ws() {
-        return WebSocket.Json
-                .accept(request -> ActorFlow.actorRef(out -> SearchActor.props(out, apiService, readabilityService),
-                        actorSystem, materializer));
+    public WebSocket searchSocket() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> SearchActor.props(out, apiService, readabilityService),
+                actorSystem, materializer));
     }
 
     /**
@@ -65,7 +64,6 @@ public class HomeController extends Controller {
             if (!projects.isEmpty()) {
                 return ok(views.html.skill.render(projects));
             }
-
             return ok("not found");
         });
     }
@@ -73,5 +71,4 @@ public class HomeController extends Controller {
     public Result readability(Http.Request request, String input) {
         return ok(views.html.readability.render(readabilityService.getReadability(input), request));
     }
-
 }

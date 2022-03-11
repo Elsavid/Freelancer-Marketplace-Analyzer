@@ -2,12 +2,11 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page with project search request result
-GET    /                           controllers.HomeController.index(request: Request)
-GET    /ws                      controllers.HomeController.ws
-GET    /readability/:input             controllers.HomeController.readability(request: Request, input: String)
+# Home page with project search request result display
+GET        /                          controllers.HomeController.index(request: Request)
+# Route used for search requests
+GET        /searchSocket              controllers.HomeController.searchSocket
+GET        /readability/:input        controllers.HomeController.readability(request: Request, input: String)
 GET    /skill/:skill         controllers.HomeController.skill(skill: String)
-
-
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET        /assets/*file              controllers.Assets.versioned(path="/public", file: Asset)

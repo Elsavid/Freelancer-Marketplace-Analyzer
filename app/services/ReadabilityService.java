@@ -3,16 +3,10 @@ package services;
 import models.AverageReadability;
 import models.Project;
 import models.Readability;
-import org.checkerframework.checker.units.qual.A;
 
 import java.text.BreakIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CompletionStage;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ReadabilityService {
 

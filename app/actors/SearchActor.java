@@ -1,36 +1,29 @@
 package actors;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletionStage;
 
 import javax.inject.Inject;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import akka.actor.AbstractActor;
-import akka.actor.AbstractActor.Receive;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import models.AverageReadability;
-import models.Project;
-import models.Readability;
-import models.SearchBox;
-import models.Skill;
-import play.libs.Json;
+import models.*;
 import services.ApiService;
 import services.ReadabilityService;
+
+import static java.util.stream.Collectors.toList;
 
 public class SearchActor extends AbstractActor {
 
     private LoggingAdapter logger = Logging.getLogger(getContext().getSystem(), this);
     private final ActorRef out;
-    String query;
     ApiService apiService;
     ReadabilityService readabilityService;
 
@@ -47,58 +40,34 @@ public class SearchActor extends AbstractActor {
     }
 
     private void onSendMessage(JsonNode request) {
-        ObjectMapper mapper = new ObjectMapper();
-        SearchBox searchBox = mapper.convertValue(request, SearchBox.class);
-        logger.debug("onSendMessage - received message: " + searchBox.getKeywords());
 
-        // api service sends http request
-        CompletionStage<List<Project>> projectList = apiService.getProjects(searchBox.getKeywords());
-        // readability service computes the metrics
+        // Send an HTTP request to the API and extract a list of Project objects out of it
+        CompletionStage<List<Project>> projectsPromise = apiService.getProjects(request.get("keywords").asText(), 250);
 
-        // when list of project is received, convert to json and return
-        convertToJson(projectList, searchBox.getKeywords());
-    }
+        // Compute word statistics of each Project object and update the associated attribute
+        projectsPromise.thenApply(WordStatsProcessor::processWordStats)
+                .thenApply(projectList -> {
+                    // Convert the first 10 projects to JSON to send to the front-end once the statistics have been computed
 
-    private void convertToJson(CompletionStage<List<Project>> projectList, String keywords) {
-        projectList.thenAcceptAsync(res -> {
-            if (!res.isEmpty()) {
+                    // Readability feature
+                    AverageReadability averageReadability = readabilityService.getAvgReadability(projectList);
+                    // Compute the global query word statistics
+                    Map<String, Long> wordStats = WordStatsProcessor.getGlobalWordStats(projectList);
 
-                ObjectNode response = Json.newObject();
-                response.put("keywords", keywords);
+                    List<Project> projects = projectList.stream().limit(10).collect(toList());
 
-                AverageReadability averageReadability = readabilityService.getAvgReadability(res);
-                response.put("flesch_index", averageReadability.getFleschIndex());
-                response.put("FKGL", averageReadability.getFKGL());
+                    ObjectNode response = ProjectToJsonParser.convertToJson(projects);
 
-                ObjectNode projects = Json.newObject();
+                    response.put("keywords", request.get("keywords").asText());
+                    response.put("flesch_index", averageReadability.getFleschIndex());
+                    response.put("FKGL", averageReadability.getFKGL());
 
-                for (int i = 0; i < res.size(); i++) {
+                    //TODO Add global stats
 
-                    Project projectObject = res.get(i);
-                    ObjectNode projectJson = Json.newObject();
-
-                    projectJson.put("owner_id", projectObject.getOwnerId());
-                    projectJson.put("title", projectObject.getTitle());
-                    projectJson.put("submitdate", projectObject.getSubmitDate());
-
-                    ArrayNode skillArray = projectJson.putArray("skills");
-                    for (Skill s : projectObject.getSkills()) {
-                        ObjectNode skill = Json.newObject();
-                        skill.put("id", s.getId());
-                        skill.put("name", s.getName());
-                        skillArray.add(skill);
-                    }
-
-                    projectJson.put("preview_description", projectObject.getPreviewDescription());
-
-                    projects.set(String.valueOf(i), projectJson);
-                }
-
-                response.set("projects", projects);
-
-                out.tell(response, self());
-            }
-        });
+                    return response;
+                })
+                // Finally, send the answer
+                .thenAcceptAsync(response -> out.tell(response, self()));
     }
 
     @Override

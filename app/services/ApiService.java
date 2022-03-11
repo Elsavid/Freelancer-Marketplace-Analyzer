@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import models.Project;
+import models.Skill;
 import play.libs.ws.WSBodyReadables;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
@@ -20,6 +21,7 @@ public class ApiService {
 
     // TODO Rename "listProjects" as "query"
     public static String listProjects = "https://www.freelancer.com/api/projects/0.1/projects/active?limit=";
+    public static String getSkill = "https://www.freelancer.com/api/projects/0.1/projects/active?limit=10&job_details=true&jobs[]=";
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     @Inject
     WSClient ws;
@@ -29,10 +31,13 @@ public class ApiService {
         return processProjectResponse(resp);
     }
 
-    public CompletableFuture<Object> sendRequest(String url) {
-        System.out.println("[debug] sending request: " + url);
-        WSRequest request = ws.url(url);
+    public CompletionStage<List<Project>> getSkill(String query) {
+        CompletableFuture<Object> resp = sendRequest(ApiService.getSkill + query);
+        return processProjectResponse(resp);
+    }
 
+    public CompletableFuture<Object> sendRequest(String url) {
+        WSRequest request = ws.url(url);
         CompletionStage<JsonNode> jsonPromise = request.get()
                 .thenApply(r -> r.getBody(WSBodyReadables.instance.json()));
         return jsonPromise.toCompletableFuture().thenApply(json -> json);
@@ -46,7 +51,7 @@ public class ApiService {
                 Project p = new Project(item.get("id").asInt(), item.get("owner_id").asText(), dateFormat.format(new Date(item.get("submitdate").asLong() * 1000L)), item.get("title").asText(), "", new ArrayList<>(), item.get("preview_description").asText());
 
                 for (JsonNode skill : item.get("jobs")) {
-                    p.addSkill(skill.get("name").asText());
+                    p.addSkill(new Skill(skill.get("id").asInt(), skill.get("name").asText()));
                 }
 
                 projects.add(p);

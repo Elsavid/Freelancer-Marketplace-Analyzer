@@ -17,18 +17,15 @@
         <section>
             <div class="centeredBlock searchBlock">
                 <form id="searchForm">
-                    <input class="searchBar" id="searchKeyWords" type="text" name="query" placeholder="Enter keywords here..." required></input>
+                    <input class="searchBar" id="searchKeyWords" type="text" name="query"
+                    placeholder="Enter keywords here..." required></input>
                     <input class="searchButton" type="submit" value="Search"></input>
                 </form>
             </div>
         </section>
         <section>
             <div id="resultList" class="centeredBlock">
-
-
-                <table id="result" class="projectTable">
-                        <!-- Placeholder for result -->
-                </table>
+                    <!-- Place holder for tables -->
             </div>
         </section>
     </body>
@@ -44,6 +41,7 @@
                 let projects = resp["projects"];
                 let resultTable = $('<table class="projectTable"><thead><tr><th>Owner</th><th>Submit date</th><th>Title</th><th>Skills</th><th>Word statistics</th></tr></thead>');
 
+
                 for (let key of Object.keys(projects)) {
 
                     let project = projects[key];
@@ -58,7 +56,7 @@
                     let ref = project.skills;
                     for (let i = 0; i < ref.length; i++) {
                         let skill = ref[i];
-                        skillsContainer.append($('<tr/>').append($('<td style="border:none">').append($('<a href="/skill/' + skill + '" style="text-decoration: none;" target="_blank">' + skill + '</a>'))));
+                        skillsContainer.append($('<tr/>').append($('<td style="border:none">').append($('<a href="/skill/' + skill.id + '" style="text-decoration: none;" target="_blank">' + skill.name + '</a>'))));
                     }
 
                     let statsContainer = $('<td/>').append($('<table style="border:none"/>').append($('<tr/>')));

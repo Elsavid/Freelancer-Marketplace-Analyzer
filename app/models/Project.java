@@ -11,7 +11,7 @@ public class Project {
     private String submitDate;
     private String title;
     private String type;
-    private ArrayList<String> skills;
+    private ArrayList<Skill> skills;
     private String previewDescription;
     private Map<String, Long> wordStats;
 
@@ -19,7 +19,7 @@ public class Project {
         this(0,"",null,"","",new ArrayList<>(),"");
     }
 
-    public Project(int id, String ownerId, String submitDate, String title, String type, ArrayList<String> skills, String previewDescription) {
+    public Project(int id, String ownerId, String submitDate, String title, String type, ArrayList<Skill> skills, String previewDescription) {
         this.id = id;
         this.ownerId = ownerId;
         this.submitDate = submitDate;
@@ -64,15 +64,15 @@ public class Project {
         this.type = type;
     }
 
-    public ArrayList<String> getSkills() {
+    public ArrayList<Skill> getSkills() {
         return skills;
     }
 
-    public void setSkills(ArrayList<String> skills) {
+    public void setSkills(ArrayList<Skill> skills) {
         this.skills = skills;
     }
 
-    public void addSkill(String skill) {
+    public void addSkill(Skill skill) {
         this.skills.add(skill);
     }
 

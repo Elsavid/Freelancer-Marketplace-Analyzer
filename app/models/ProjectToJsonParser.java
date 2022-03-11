@@ -25,11 +25,25 @@ public class ProjectToJsonParser {
         projectJson.put("submitdate", projectObject.getSubmitDate());
         projectJson.put("preview_description", projectObject.getPreviewDescription());
 
+//        ArrayNode skillArray = projectJson.putArray("skills");
+//        for (Skill s : projectObject.getSkills()) {
+//            ObjectNode skill = Json.newObject();
+//            skill.put("id", s.getId());
+//            skill.put("name", s.getName());
+//            skillArray.add(skill);
+//        }
+
+
         // Skills list
         ArrayNode skillArray = projectJson.putArray("skills");
-        projectObject.getSkills().stream().forEach(skillArray::add);
+        projectObject.getSkills().stream().forEach(skillObject -> {
+            ObjectNode skillJson = Json.newObject();
+            skillJson.put("id", skillObject.getId());
+            skillJson.put("name", skillObject.getName());
+            skillArray.add(skillJson);
+        });
 
-        // Wors statistics
+        // Word statistics
         ArrayNode wordStatsArray = projectJson.putArray("stats");
         projectObject.getWordStats().entrySet().stream().forEach(e -> wordStatsArray.add(e.getKey() + " - " + e.getValue()));
 

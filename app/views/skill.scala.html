@@ -1,0 +1,55 @@
+@import java.util.List;
+@import models.Project;
+
+@(projects:List[Project])
+<!DOCTYPE html>
+
+<html>
+<style>
+    table,
+    th,
+    td {
+        border: 1px solid black;
+    }
+</style>
+
+<head>
+    <title>Skill</title>
+    <script type='text/javascript' src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
+</head>
+
+<body>
+    <section>
+        <h2>Skill</h2>
+    </section>
+    <section>
+        <table id="project">
+            <tr>
+                <th>Owner Id</th>
+                <th>Submit Date</th>
+                <th>Title</th>
+                <th>Skills</th>
+            </tr>
+            @for(i <- 0 until projects.size()){ <tr>
+                <td>@projects.get(i).getOwnerId()</td>
+                <td>@projects.get(i).getSubmitDate()</td>
+                <td>@projects.get(i).getTitle()</td>
+                <td>
+                    <table>
+                        <tr>
+                            @for(j <- 0 until projects.get(i).getSkills().size()){ <td>
+                                @projects.get(i).getSkills().get(j).getName()
+                </td>
+                } </tr>
+        </table>
+        </td>
+        </tr>
+        }
+        </table>
+    </section>
+</body>
+<script>
+
+</script>
+
+</html>

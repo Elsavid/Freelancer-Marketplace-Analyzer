@@ -1,7 +1,6 @@
 package actors;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletionStage;
 
 import javax.inject.Inject;
@@ -17,8 +16,6 @@ import akka.event.LoggingAdapter;
 import models.*;
 import services.ApiService;
 import services.ReadabilityService;
-
-import static java.util.stream.Collectors.toList;
 
 public class SearchActor extends AbstractActor {
 
@@ -39,34 +36,23 @@ public class SearchActor extends AbstractActor {
         logger.info("New Search Actor for WebSocket {}", out);
     }
 
+    /**
+     * Sends an HTTP request to the API and extracts a list of Project objects out of it, then notifies the front end
+     *
+     * @param request The json data containing the keywords to use for the GET request
+     */
     private void onSendMessage(JsonNode request) {
 
-        // Send an HTTP request to the API and extract a list of Project objects out of it
-        CompletionStage<List<Project>> projectsPromise = apiService.getProjects(request.get("keywords").asText(), 250);
-
-        // Compute word statistics of each Project object and update the associated attribute
-        projectsPromise.thenApply(WordStatsProcessor::processWordStats)
-                .thenApply(projectList -> {
-                    // Convert the first 10 projects to JSON to send to the front-end once the statistics have been computed
-
-                    // Readability feature
+        CompletionStage<List<Project>> projectsPromise = apiService.getProjects(request.get("keywords").asText(), 10);
+        projectsPromise.thenApply(projectList -> {
+                    // Readability feature, conversion to Json
                     AverageReadability averageReadability = readabilityService.getAvgReadability(projectList);
-                    // Compute the global query word statistics
-                    Map<String, Long> wordStats = WordStatsProcessor.getGlobalWordStats(projectList);
-
-                    List<Project> projects = projectList.stream().limit(10).collect(toList());
-
-                    ObjectNode response = ProjectToJsonParser.convertToJson(projects);
-
+                    ObjectNode response = ProjectToJsonParser.convertToJson(projectList);
                     response.put("keywords", request.get("keywords").asText());
                     response.put("flesch_index", averageReadability.getFleschIndex());
                     response.put("FKGL", averageReadability.getFKGL());
-
-                    //TODO Add global stats
-
                     return response;
                 })
-                // Finally, send the answer
                 .thenAcceptAsync(response -> out.tell(response, self()));
     }
 

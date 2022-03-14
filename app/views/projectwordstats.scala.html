@@ -1,0 +1,27 @@
+@import WordStatsProcessor.processProjectWordStats;
+@import WordStatsProcessor.mapToHtmlTable;
+@import play.twirl.api.HtmlFormat.raw;
+
+@(project: Project)
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Word Statistics</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
+        <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/prism.css")'>
+        <link rel="shortcut icon" type="image/png" href='@routes.Assets.versioned("images/favicon.png")'>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src='@routes.Assets.versioned("javascripts/prism.js")' type="text/javascript"></script>
+    </head>
+
+    <body>
+        <section>
+            <div class="centeredBlock">
+                <h1>Words statistics for project ID @project.getId()</h1>
+                @raw(mapToHtmlTable(processProjectWordStats(project).getWordStats()))
+            </div>
+        </section>
+    </body>
+</html>

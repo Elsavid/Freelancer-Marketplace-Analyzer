@@ -1,3 +1,20 @@
+body {
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:link, a:visited {
+    color: steelblue;
+}
+
+a:hover, a:active {
+    color: midnightblue;
+}
+
 .centeredBlock {
     display: grid;
     place-items: center;
@@ -40,4 +57,8 @@ th {
 
 .projectTitle {
     text-align: left;
+}
+
+.wordStatsTable {
+
 }

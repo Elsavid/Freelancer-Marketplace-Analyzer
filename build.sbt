@@ -10,6 +10,7 @@ scalaVersion := "2.13.6"
 libraryDependencies += guice
 libraryDependencies += ws
 libraryDependencies += ehcache
+
 javaOptions in Test ++= Seq(
   "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=9998",
   "-Xms512M",

@@ -74,6 +74,12 @@ public class HomeController extends Controller {
         });
     }
 
+    /**
+     *
+     * @author Wenshu Li
+     * @param request,input
+     * @return
+     */
     public Result readability(Http.Request request, String input) {
         return ok(views.html.readability.render(readabilityService.getReadability(input), request));
     }

@@ -6,8 +6,19 @@ import play.libs.Json;
 
 import java.util.List;
 
+/**
+ * Utility methods to convert Project objects to Json data
+ *
+ * @author Vincent Marechal
+ */
 public class ProjectToJsonParser {
 
+    /**
+     * Converts a list of Project objects to a Json data node
+     *
+     * @param projectList The list of Project objects to convert
+     * @return A Json node containing the Projects data
+     */
     public static ObjectNode convertToJson(List<Project> projectList) {
 
         ObjectNode response = Json.newObject();
@@ -17,6 +28,12 @@ public class ProjectToJsonParser {
         return response;
     }
 
+    /**
+     * Converts a Project object to a Json data node
+     *
+     * @param projectObject The Project object to convert
+     * @return A Json node containing the Project data
+     */
     private static ObjectNode projectToJson(Project projectObject) {
 
         ObjectNode projectJson = Json.newObject();
@@ -24,15 +41,6 @@ public class ProjectToJsonParser {
         projectJson.put("title", projectObject.getTitle());
         projectJson.put("submitdate", projectObject.getSubmitDate());
         projectJson.put("preview_description", projectObject.getPreviewDescription());
-
-//        ArrayNode skillArray = projectJson.putArray("skills");
-//        for (Skill s : projectObject.getSkills()) {
-//            ObjectNode skill = Json.newObject();
-//            skill.put("id", s.getId());
-//            skill.put("name", s.getName());
-//            skillArray.add(skill);
-//        }
-
 
         // Skills list
         ArrayNode skillArray = projectJson.putArray("skills");
@@ -42,11 +50,6 @@ public class ProjectToJsonParser {
             skillJson.put("name", skillObject.getName());
             skillArray.add(skillJson);
         });
-
-        // Word statistics
-        ArrayNode wordStatsArray = projectJson.putArray("stats");
-        projectObject.getWordStats().entrySet().stream().forEach(e -> wordStatsArray.add(e.getKey() + " - " + e.getValue()));
-
         return projectJson;
     }
 }

@@ -1,0 +1,27 @@
+@import WordStatsProcessor.getGlobalWordStats;
+@import WordStatsProcessor.mapToHtmlTable;
+@import play.twirl.api.HtmlFormat.raw;
+
+@(keywords: String, projects: List[Project])
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Global Word Statistics</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
+        <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/prism.css")'>
+        <link rel="shortcut icon" type="image/png" href='@routes.Assets.versioned("images/favicon.png")'>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src='@routes.Assets.versioned("javascripts/prism.js")' type="text/javascript"></script>
+    </head>
+
+    <body>
+        <section>
+            <div class="centeredBlock">
+                <h1>Global words statistics for the search result using the keywords "@keywords"</h1>
+                    @raw(mapToHtmlTable(getGlobalWordStats(projects)))
+            </div>
+        </section>
+    </body>
+</html>

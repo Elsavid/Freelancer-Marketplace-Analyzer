@@ -41,10 +41,9 @@
                 let projects = resp["projects"];
                 let resultTable = $('<table class="projectTable"><thead><tr><th>Owner</th><th>Submit date</th><th>Title</th><th>Skills</th><th>Word statistics</th></tr></thead>');
 
+                for (let id of Object.keys(projects)) {
 
-                for (let key of Object.keys(projects)) {
-
-                    let project = projects[key];
+                    let project = projects[id];
 
                     // Create a row for a project
                     let row = $('<tr/>');
@@ -59,15 +58,8 @@
                         skillsContainer.append($('<tr/>').append($('<td style="border:none">').append($('<a href="/skill/' + skill.id + '" style="text-decoration: none;" target="_blank">' + skill.name + '</a>'))));
                     }
 
-                    let statsContainer = $('<td/>').append($('<table style="border:none"/>').append($('<tr/>')));
-                    let stats = project["stats"];
-                    for (let i = 0; i < stats.length; i++) {
-                        let word = stats[i];
-                        statsContainer.append($('<tr/>').append($('<td style="border:none">').append($('<a href="/stats/' + word + '" style="text-decoration: none;" target="_blank">' + word + '</a>'))));
-                    }
-
                     row.append(skillsContainer);
-                    row.append(statsContainer);
+                    row.append($('<td/>').append($('<a href="/stats/' + id + '">View stats</a>')));
 
                     skillsContainer.append($('<hr />'));
                     let readability = $('<td/>').append($('<a href="/readability/' + encodeURIComponent(project["preview_description"]) + '" target="_blank">' + 'Readability' + '</a>'));
@@ -76,7 +68,7 @@
                 }
                 resultTable.append($('</table>'));
 
-                $('#resultList').append($('<h3>Search results for keywords <a href="/keywords/" + resp.keywords>' + resp.keywords + '</a></h3>'));
+                $('#resultList').append($('<h3>Search results for keywords <a href="/searchstats/' + encodeURI(resp.keywords) + '">' + resp.keywords + '</a></h3>'));
 
                 if (resp["flesch_index"] != null) {
                     $('#resultList').append($('<h4>Flesh Reading Ease Index ' + resp["flesch_index"] + ' & FKGL ' + resp["FKGL"] + '</h4>'));

@@ -7,6 +7,8 @@ import java.util.stream.Stream;
 
 /**
  * Utility methods to compute and format words statistics on a Project object or list of Project objects
+ *
+ * @author Vincent Marechal
  */
 public class WordStatsProcessor {
 

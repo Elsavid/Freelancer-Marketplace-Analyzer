@@ -47,6 +47,8 @@ public class HomeController extends Controller {
      *
      * @param request The received HTTP request
      * @return Play response and render of the home page
+     *
+     * @author Whole group
      */
     public Result index(Http.Request request) {
         return ok(views.html.index.render(request));
@@ -81,6 +83,8 @@ public class HomeController extends Controller {
      *
      * @param encodedKeywords The keywords used for the query being analyzed
      * @return Play response and render of the global words statistics page
+     *
+     * @author Vincent Marechal
      */
     public CompletionStage<Result> globalStats(String encodedKeywords) {
         // Decode keywords
@@ -92,6 +96,8 @@ public class HomeController extends Controller {
      * Renders the words statistics page of the application (for a given project)
      * @param id The ID of the project to analyze
      * @return Play response and render of the project words statistics page
+     *
+     * @author Vincent Marechal
      */
     public CompletionStage<Result> stats(long id) {
         return apiService.getSingleProject(id).thenApplyAsync(project -> ok(views.html.projectwordstats.render(project)));

@@ -32,6 +32,8 @@ public class ApiService {
      * @param query The query to use for the request (including keywords)
      * @param limit The maximum number of projects to return
      * @return A CompletionStage object containing a Project objects list
+     *
+     * @author Whole group
      */
     public CompletionStage<List<Project>> getProjects(String query, int limit) {
         CompletableFuture<Object> resp = sendRequest(projectQuery + "active?limit=" + limit + "&job_details=true&query=\"" + query + "\"");
@@ -54,6 +56,8 @@ public class ApiService {
      *
      * @param id The ID of the project being fetched
      * @return A CompletionStage object containing a Project object
+     *
+     * @author Vincent Marechal
      */
     public CompletionStage<Project> getSingleProject(long id) {
         CompletableFuture<Object> resp = sendRequest(projectQuery + id);
@@ -65,6 +69,8 @@ public class ApiService {
      * Sends an HTTP request using a given url and returns the json data from the API response
      * @param url The url to use for the request
      * @return The json data from the API response
+     *
+     * @author Whole group
      */
     public CompletableFuture<Object> sendRequest(String url) {
         WSRequest request = ws.url(url);
@@ -78,6 +84,8 @@ public class ApiService {
      * Parse a json response from the API into a list of Project objects
      * @param json The API reponse (json data containing projects data)
      * @return A list of Project objects from the json data
+     *
+     * @author Whole group
      */
     public CompletionStage<List<Project>> processProjectResponse(CompletableFuture<Object> json) {
         List<Project> projects = new ArrayList<>();
@@ -91,6 +99,8 @@ public class ApiService {
      * Parse a json node containing a project data into a Project object
      * @param projectJson A json node containing the data of a single project
      * @return A Project object
+     *
+     * @author Whole group
      */
     private Project createProjectFromJsonNode(JsonNode projectJson) {
         Project p = new Project(projectJson.get("id").asInt(), projectJson.get("owner_id").asText(), dateFormat.format(new Date(projectJson.get("submitdate").asLong() * 1000L)), StringUtils.capitalize(projectJson.get("title").asText().toLowerCase()), "", new ArrayList<>(), projectJson.get("preview_description").asText());

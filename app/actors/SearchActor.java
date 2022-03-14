@@ -40,6 +40,8 @@ public class SearchActor extends AbstractActor {
      * Sends an HTTP request to the API and extracts a list of Project objects out of it, then notifies the front end
      *
      * @param request The json data containing the keywords to use for the GET request
+     *
+     * @author Whole group
      */
     private void onSendMessage(JsonNode request) {
 

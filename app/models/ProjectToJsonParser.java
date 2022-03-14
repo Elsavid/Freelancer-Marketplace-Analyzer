@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * Utility methods to convert Project objects to Json data
+ *
+ * @author Vincent Marechal
  */
 public class ProjectToJsonParser {
 

@@ -37,7 +37,7 @@ public class ApiService implements ApiServiceInterface {
      */
     public CompletionStage<List<Project>> getProjects(String query, int limit) {
         CompletableFuture<Object> resp = sendRequest(projectQuery + "active?limit=" + limit + "&job_details=true&query=\"" + query + "\"");
-        return processProjectResponse(resp);
+        return processAPIResponse(resp);
     }
 
     /**
@@ -46,10 +46,11 @@ public class ApiService implements ApiServiceInterface {
      * @author Yan Ren
      * @param query The query to use for the request (a skill name)
      * @return A CompletionStage object containing a Project objects list
+     * @author Yan Ren
      */
     public CompletionStage<List<Project>> getSkill(String query) {
         CompletableFuture<Object> resp = sendRequest(ApiService.skillQuery + query);
-        return processProjectResponse(resp);
+        return processAPIResponse(resp);
     }
 
     /**
@@ -68,6 +69,7 @@ public class ApiService implements ApiServiceInterface {
 
     /**
      * Sends an HTTP request using a given url and returns the json data from the API response
+     *
      * @param url The url to use for the request
      * @return The json data from the API response
      *
@@ -82,15 +84,20 @@ public class ApiService implements ApiServiceInterface {
 
     /**
      * Parse a json response from the API into a list of Project objects
+     *
      * @param json The API reponse (json data containing projects data)
      * @return A list of Project objects from the json data
      *
      * @author Whole group
      */
-    public CompletionStage<List<Project>> processProjectResponse(CompletableFuture<Object> json) {
+    public CompletionStage<List<Project>> processAPIResponse(CompletableFuture<Object> json) {
         List<Project> projects = new ArrayList<>();
+        // Make sure that the request was a success before handling it
         return json.thenApply(response -> {
-            ((JsonNode) response).get("result").get("projects").forEach(item -> projects.add(createProjectFromJsonNode(item)));
+            String status = ((JsonNode) response).get("status").asText();
+            if ("success".equals(status)) {
+                ((JsonNode) response).get("result").get("projects").forEach(item -> projects.add(createProjectFromJsonNode(item)));
+            }
             return projects;
         });
     }

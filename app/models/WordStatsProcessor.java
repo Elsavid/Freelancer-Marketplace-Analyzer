@@ -26,7 +26,7 @@ public class WordStatsProcessor {
                 .reduce(new LinkedHashMap<>(),
                         (m1, m2) -> Stream.concat(m1.entrySet().stream(), m2.entrySet().stream())
                                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v1 + v2, LinkedHashMap::new))
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, Long::sum, LinkedHashMap::new))
                 );
     }
 
@@ -38,7 +38,7 @@ public class WordStatsProcessor {
      */
     public static Project processProjectWordStats(Project p) {
         Map<String, Long> stats = Arrays.stream(p.getPreviewDescription()
-                        .replaceAll("[^a-zA-Z0-9\\s]", "\\s")
+                        .replaceAll("[^a-zA-Z0-9\\s]", " ")
                         .split("\\s+"))
                 .map(String::toLowerCase)
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
@@ -50,7 +50,7 @@ public class WordStatsProcessor {
     }
 
     /**
-     * Format a words statistics Map into a HTML table String containing statistics data
+     * Format a words statistics Map into an HTML table String containing statistics data
      * (because twirl templates do not keep the Map ordering)
      *
      * @param wordStats The Map to format

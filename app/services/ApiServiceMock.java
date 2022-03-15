@@ -94,7 +94,7 @@ public class ApiServiceMock implements ApiServiceInterface {
      * @param json The API reponse (json data containing projects data)
      * @return A list of Project objects from the json data
      */
-    public CompletionStage<List<Project>> processProjectResponse(CompletableFuture<Object> json) {
+    public CompletionStage<List<Project>> processAPIResponse(CompletableFuture<Object> json) {
         return null;
     }
 

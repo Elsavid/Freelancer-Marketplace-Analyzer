@@ -9,9 +9,9 @@ import java.util.Map;
  */
 public class Project {
 
-    private int id;
-    private String ownerId;
-    private String submitDate;
+    final private int id;
+    final private String ownerId;
+    final private String submitDate;
     private String title;
     private String type;
     private ArrayList<Skill> skills;
@@ -39,16 +39,8 @@ public class Project {
         return ownerId;
     }
 
-    public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
-    }
-
     public String getSubmitDate() {
         return submitDate;
-    }
-
-    public void setSubmitDate(String submitDate) {
-        this.submitDate = submitDate;
     }
 
     public String getTitle() {

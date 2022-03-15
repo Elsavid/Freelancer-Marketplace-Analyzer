@@ -10,6 +10,7 @@
         <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/prism.css")'>
         <link rel="shortcut icon" type="image/png" href='@routes.Assets.versioned("images/favicon.png")'>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src='@routes.Assets.versioned("javascripts/main.js")' type="text/javascript"></script>
         <script src='@routes.Assets.versioned("javascripts/prism.js")' type="text/javascript"></script>
     </head>
 
@@ -33,48 +34,9 @@
     <script>
             // Create WebSocket connection
             const searchSocket = new WebSocket('ws://localhost:9000/searchSocket');
-
-            // Listen for message
             searchSocket.addEventListener("message", function (event) {
-
-                let resp = JSON.parse(event.data);
-                let projects = resp["projects"];
-                let resultTable = $('<table class="projectTable"><thead><tr><th>Owner</th><th>Submit date</th><th>Title</th><th>Skills</th><th>Word statistics</th></tr></thead>');
-
-                for (let id of Object.keys(projects)) {
-
-                    let project = projects[id];
-
-                    // Create a row for a project
-                    let row = $('<tr/>');
-                    row.append($('<td/>').append($('<a href="/owner/' + project.owner_id + '">' + project.owner_id + '</a>')));
-                    row.append($('<td/>').append(project.submitdate));
-                    row.append($('<td/ class="projectTitle">').append(project.title));
-
-                    let skillsContainer = $('<td/>').append($('<table style="border:none"/>').append($('<tr/>')));
-                    let ref = project.skills;
-                    for (let i = 0; i < ref.length; i++) {
-                        let skill = ref[i];
-                        skillsContainer.append($('<tr/>').append($('<td style="border:none">').append($('<a href="/skill/' + skill.id + '" style="text-decoration: none;" target="_blank">' + skill.name + '</a>'))));
-                    }
-
-                    row.append(skillsContainer);
-                    row.append($('<td/>').append($('<a href="/stats/' + id + '">View stats</a>')));
-
-                    skillsContainer.append($('<hr />'));
-                    let readability = $('<td/>').append($('<a href="/readability/' + encodeURIComponent(project["preview_description"]) + '" target="_blank">' + 'Readability' + '</a>'));
-                    row.append(readability);
-                    resultTable.append(row);
-                }
-                resultTable.append($('</table>'));
-
-                $('#resultList').append($('<h3>Search results for keywords <a href="/searchstats/' + encodeURI(resp.keywords) + '">' + resp.keywords + '</a></h3>'));
-
-                if (resp["flesch_index"] != null) {
-                    $('#resultList').append($('<h4>Flesh Reading Ease Index ' + resp["flesch_index"] + ' & FKGL ' + resp["FKGL"] + '</h4>'));
-                }
-
-                $('#resultList').append(resultTable);
+                // Listen for message and add result as the top of the page
+                $('#resultList').prepend(displayResult(event.data));
             });
 
             $("#searchForm").submit(function (event) {

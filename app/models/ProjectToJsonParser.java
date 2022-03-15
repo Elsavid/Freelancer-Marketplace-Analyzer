@@ -34,7 +34,7 @@ public class ProjectToJsonParser {
      * @param projectObject The Project object to convert
      * @return A Json node containing the Project data
      */
-    private static ObjectNode projectToJson(Project projectObject) {
+    public static ObjectNode projectToJson(Project projectObject) {
 
         ObjectNode projectJson = Json.newObject();
         projectJson.put("owner_id", projectObject.getOwnerId());

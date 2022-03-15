@@ -47,8 +47,22 @@ input:focus {
     outline: none !important;
 }
 
+.projectTable {
+    border-collapse: collapse;
+}
+
 .projectTable td {
     text-align: center;
+    border: 1px solid;
+}
+
+.skillsTable {
+    border: none
+}
+
+.skillsTable td {
+    text-align: center;
+    border: none;
 }
 
 th {

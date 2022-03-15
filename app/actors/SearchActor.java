@@ -17,6 +17,8 @@ import models.*;
 import services.ApiService;
 import services.ReadabilityService;
 
+import static models.ProjectToJsonParser.convertToJson;
+
 public class SearchActor extends AbstractActor {
 
     private LoggingAdapter logger = Logging.getLogger(getContext().getSystem(), this);
@@ -47,12 +49,13 @@ public class SearchActor extends AbstractActor {
 
         CompletionStage<List<Project>> projectsPromise = apiService.getProjects(request.get("keywords").asText(), 10);
         projectsPromise.thenApply(projectList -> {
-                    // Readability feature, conversion to Json
-                    AverageReadability averageReadability = readabilityService.getAvgReadability(projectList);
-                    ObjectNode response = ProjectToJsonParser.convertToJson(projectList);
+                    ObjectNode response = convertToJson(projectList);
                     response.put("keywords", request.get("keywords").asText());
-                    response.put("flesch_index", averageReadability.getFleschIndex());
-                    response.put("FKGL", averageReadability.getFKGL());
+                    if (!projectList.isEmpty()) {
+                        AverageReadability averageReadability = readabilityService.getAvgReadability(projectList);
+                        response.put("flesch_index", averageReadability.getFleschIndex());
+                        response.put("FKGL", averageReadability.getFKGL());
+                    }
                     return response;
                 })
                 .thenAcceptAsync(response -> out.tell(response, self()));

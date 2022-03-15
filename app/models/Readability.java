@@ -18,10 +18,6 @@ public class Readability {
         return fleschIndex;
     }
 
-    public void setFleschIndex(int fleschIndex) {
-        this.fleschIndex = fleschIndex;
-    }
-
     public String getEducationLevel() {
         return educationLevel;
     }

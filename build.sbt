@@ -12,6 +12,7 @@ libraryDependencies += ws
 libraryDependencies += ehcache
 libraryDependencies += "com.typesafe.akka" %% "akka-testkit" % "2.6.18" % Test
 
+libraryDependencies += "com.github.sbt" % "junit-interface" % "0.13.3" % Test
 
 javaOptions in Test ++= Seq(
   "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=9998",

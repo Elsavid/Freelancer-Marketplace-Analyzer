@@ -20,7 +20,7 @@ public interface ApiServiceInterface {
      * @param limit The maximum number of projects to return
      * @return A CompletionStage object containing a Project objects list
      */
-    public CompletionStage<List<Project>> getProjects(String query, int limit);
+    CompletionStage<List<Project>> getProjects(String query, int limit);
 
     /**
      * Sends an HTTP request to the API to get a list of projects based on skills
@@ -29,7 +29,7 @@ public interface ApiServiceInterface {
      * @param query The query to use for the request (a skill name)
      * @return A CompletionStage object containing a Project objects list
      */
-    public CompletionStage<List<Project>> getSkill(String query);
+    CompletionStage<List<Project>> getSkill(String query);
 
     /**
      * Sends an HTTP request to the API to get a single project based on its ID
@@ -37,7 +37,7 @@ public interface ApiServiceInterface {
      * @param id The ID of the project being fetched
      * @return A CompletionStage object containing a Project object
      */
-    public CompletionStage<Project> getSingleProject(long id);
+    CompletionStage<Project> getSingleProject(long id);
 
     /**
      * Sends an HTTP request using a given url and returns the json data from the
@@ -46,15 +46,15 @@ public interface ApiServiceInterface {
      * @param url The url to use for the request
      * @return The json data from the API response
      */
-    public CompletableFuture<Object> sendRequest(String url);
+    CompletableFuture<Object> sendRequest(String url);
 
     /**
      * Parse a json response from the API into a list of Project objects
-     * 
-     * @param json The API reponse (json data containing projects data)
+     *
+     * @param json The API response (json data containing projects data)
      * @return A list of Project objects from the json data
      */
-    public CompletionStage<List<Project>> processProjectResponse(CompletableFuture<Object> json);
+    CompletionStage<List<Project>> processAPIResponse(CompletableFuture<Object> json);
 
-    public Project createProjectFromJsonNode(JsonNode projectJson);
+    Project createProjectFromJsonNode(JsonNode projectJson);
 }

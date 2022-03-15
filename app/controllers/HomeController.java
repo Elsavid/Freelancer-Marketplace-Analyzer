@@ -3,6 +3,7 @@ package controllers;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import javax.inject.Inject;
@@ -75,13 +76,16 @@ public class HomeController extends Controller {
     }
 
     /**
+     * Renders the readability page of application
+     * @param input The pre_description field text
+     * @return Render of the readability page
      *
      * @author Wenshu Li
-     * @param request,input
-     * @return
      */
-    public Result readability(Http.Request request, String input) {
-        return ok(views.html.readability.render(readabilityService.getReadability(input), request));
+    public CompletionStage<Result> readability(String input) {
+        return CompletableFuture.supplyAsync(()->{
+              return ok(views.html.readability.render(readabilityService.getReadability(input)));
+        });
     }
 
     /**

@@ -9,7 +9,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-
+/**
+ * Service methods for computing average readability of projects list and single project
+ *
+ * @author Wenshu Li
+ */
 public class ReadabilityService {
 
     public static final double BASE = 206.835;
@@ -19,6 +23,12 @@ public class ReadabilityService {
     public static final double COEFFICIENT_2 = 11.8;
     public static final double COEFFICIENT_3 = 15.59;
 
+    /**
+     * Get the average readability of projects list
+     *
+     * @param projects The list of Project objects to analyze
+     * @return An AverageReadability object
+     */
     public AverageReadability getAvgReadability(List<Project> projects){
         double fleschIndex = projects.stream()
                                      .mapToDouble(project -> getReadability(project.getPreviewDescription()).getFleschIndex())
@@ -29,7 +39,12 @@ public class ReadabilityService {
         AverageReadability averageReadability = new AverageReadability(fleschIndex,FKGL);
         return averageReadability;
     }
-
+    /**
+     * Get the readability for single project
+     *
+     * @param input The pre_description field text
+     * @return A Readability object
+     */
     public Readability getReadability(String input){
         Readability readability;
         if(input==null||input.isEmpty()||input.trim().isEmpty()){
@@ -47,7 +62,12 @@ public class ReadabilityService {
         }
         return readability;
     }
-
+    /**
+     * Get the statistics of sentences number
+     *
+     * @param input The pre_description field text
+     * @return The number of sentences
+     */
     public long countTotalSentences(String input){
         Locale currentLocale = new Locale("en","US");
         long count=0;
@@ -61,12 +81,23 @@ public class ReadabilityService {
         return (count-1);
     }
 
+    /**
+     * Get the statistics of words number
+     *
+     * @param input The pre_description field text
+     * @return The number of words
+     */
     public long countTotalWords(String input){
         long count = Arrays.stream(input.replaceAll("^[,\\s]+","").split("[,\\s]+"))
                             .count();
         return count;
     }
-
+    /**
+     * Get the statistics of syllables number
+     *
+     * @param input The pre_description field text
+     * @return The number of syllables
+     */
     public long countTotalSyllables(String input){
         long count = Arrays.stream(input.replaceAll("^[,\\s]+","").split("[,\\s]+"))
                       .mapToLong(word-> {
@@ -75,7 +106,12 @@ public class ReadabilityService {
                       .sum();
         return count;
     }
-
+    /**
+     * Get the statistics of syllables number in a word
+     *
+     * @param word Single word in pre_description
+     * @return The number of syllables in a single word
+     */
     public long countSyllableInSingleWord(String word){
         long count=0;
         for(int i=0;i<word.length();i++){
@@ -93,7 +129,12 @@ public class ReadabilityService {
         }
         return count;
     }
-
+    /**
+     * Determine if the char is a syllable
+     *
+     * @param c Single char in a word
+     * @return If the char is Vowel return ture, else return false
+     */
     public boolean isVowel(char c){
         if(c == 'a'|| c == 'e' || c=='i' || c == 'o' || c == 'u'){
             return true;
@@ -102,7 +143,12 @@ public class ReadabilityService {
             return false;
         }
     }
-
+    /**
+     * Get the education level by given fleschIndex
+     *
+     * @param fleschIndex the fleschIndex
+     * @return The education level
+     */
     public String getEducationLevel(double fleschIndex){
         //String[] s = {"Early","5th grade","6th grade","7th grade","8th grade","9th grade","High School","Some College","College Graduate"};
         String educationLevel="";

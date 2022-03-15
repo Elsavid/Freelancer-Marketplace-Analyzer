@@ -10,6 +10,8 @@ scalaVersion := "2.13.6"
 libraryDependencies += guice
 libraryDependencies += ws
 libraryDependencies += ehcache
+libraryDependencies += "com.typesafe.akka" %% "akka-testkit" % "2.6.18" % Test
+
 
 javaOptions in Test ++= Seq(
   "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=9998",

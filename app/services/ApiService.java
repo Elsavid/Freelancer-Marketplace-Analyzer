@@ -18,7 +18,7 @@ import play.libs.ws.WSBodyReadables;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 
-public class ApiService {
+public class ApiService implements ApiServiceInterface {
 
     public static String projectQuery = "https://www.freelancer.com/api/projects/0.1/projects/";
     public static String skillQuery = "https://www.freelancer.com/api/projects/0.1/projects/active?limit=10&job_details=true&jobs[]=";
@@ -42,7 +42,8 @@ public class ApiService {
 
     /**
      * Sends an HTTP request to the API to get a list of projects based on skills
-     *
+     * 
+     * @author Yan Ren
      * @param query The query to use for the request (a skill name)
      * @return A CompletionStage object containing a Project objects list
      */
@@ -79,7 +80,6 @@ public class ApiService {
         return jsonPromise.toCompletableFuture().thenApply(json -> json);
     }
 
-    // TODO Refactor this ugly method using streams
     /**
      * Parse a json response from the API into a list of Project objects
      * @param json The API reponse (json data containing projects data)
@@ -97,12 +97,13 @@ public class ApiService {
 
     /**
      * Parse a json node containing a project data into a Project object
+     * 
      * @param projectJson A json node containing the data of a single project
      * @return A Project object
      *
      * @author Whole group
      */
-    private Project createProjectFromJsonNode(JsonNode projectJson) {
+    public Project createProjectFromJsonNode(JsonNode projectJson) {
         Project p = new Project(projectJson.get("id").asInt(), projectJson.get("owner_id").asText(), dateFormat.format(new Date(projectJson.get("submitdate").asLong() * 1000L)), StringUtils.capitalize(projectJson.get("title").asText().toLowerCase()), "", new ArrayList<>(), projectJson.get("preview_description").asText());
         for (JsonNode skill : projectJson.get("jobs")) {
             p.addSkill(new Skill(skill.get("id").asInt(), skill.get("name").asText()));

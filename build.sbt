@@ -31,3 +31,10 @@ javaOptions in Test ++= Seq(
 
 // Use .class files instead of generated .scala files for views and routes
 //EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)
+
+// to use ws
+libraryDependencies ++= Seq(
+  javaWs
+)
+
+

@@ -1,0 +1,72 @@
+@(owner: Owner,projects:List[Project])
+<html>
+
+<head>
+    <title>Employer</title>
+    <style>
+        table,td{
+            border: 2px solid;
+            border-collapse: collapse;
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center
+
+        }
+        body{
+            margin-right: auto;
+            text-align: center
+        }
+        #section2{
+            padding-top: 30px;
+            padding-bottom: 100px;
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <h1>Information of employer @owner.Id</h1>
+    <section>
+    <h2>Personal information</h2>
+    <table >
+        <tr>
+            <th>attribute</th>
+            <th>value</th>
+        </tr>
+        @for(s<-owner.userInfnormation){ <tr>
+            <td>@s._1 </td>
+            <td>@s._2.replaceAll("^\"|\"$", "") </td>
+            </tr>
+            }
+    </table>
+    </section>
+    <section id="section2">
+    <h2>Projects list</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Submit Date</th>
+            <th>Title</th>
+            <th>Skills</th>
+        </tr>
+        @for(project<-projects) { <tr>
+            <td>@project.getOwnerId</td>
+            <td>@project.getSubmitDate</td>
+            <td>@project.getTitle.replaceAll("^\"|\"$", "")</td>
+            <td>
+            <table id = "skills list" >
+                <tr>
+            @for(skill <- project.getSkills) { <td>@skill.getName.replaceAll("^\"|\"$", "")</td>
+            }
+                </tr>
+            </table>
+            </td>
+            </tr>
+            }
+    </table>
+    </section>
+</body>
+
+</html>

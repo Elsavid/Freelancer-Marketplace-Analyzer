@@ -14,7 +14,7 @@ function displayResult(data) {
 
             // Create a row for a project
             let row = $('<tr/>');
-            row.append($('<td/>').append($('<a href="/owner/' + project.owner_id + '">' + project.owner_id + '</a>')));
+            row.append($('<td/>').append($('<a href="/employer/' + project.owner_id + '">' + project.owner_id + '</a>')));
             row.append($('<td/>').append(project.submitdate));
             row.append($('<td/ class="projectTitle">').append(project.title));
 

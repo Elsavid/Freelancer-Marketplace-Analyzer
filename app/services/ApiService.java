@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import models.Project;
 import models.Skill;
+import models.Owner;
 import org.springframework.util.StringUtils;
 import play.libs.ws.WSBodyReadables;
 import play.libs.ws.WSClient;
@@ -65,6 +66,23 @@ public class ApiService implements ApiServiceInterface {
         CompletableFuture<Object> resp = sendRequest(projectQuery + id);
         // Parse to single Project object
         return resp.thenApply(jsonResp -> createProjectFromJsonNode(((JsonNode) jsonResp).get("result")));
+    }
+
+    /**
+     * Sends an HTTP request to the API to get a owner model based on its ID
+     * the onwer model saves personal information and a project list of maximum 10 projects
+     *
+     * @param owner_id The ID of the employer
+     * @return A CompletionStage Object containing a Owner object
+     *
+     * @author Haoyue Zhang
+     */
+    public CompletionStage<Owner> getUserInfo(String owner_id) {
+        return ws.url("https://www.freelancer.com/api/users/0.1/users/" + owner_id).get()
+                .thenCombine(ws.url("https://www.freelancer.com/api/projects/0.1/projects/?owners[]=" + owner_id + "&limit=10&job_details=true").get(),
+                        (r1, r2) -> {
+                            return new Owner(r1.getBody(), r2.getBody());
+                        });
     }
 
     /**

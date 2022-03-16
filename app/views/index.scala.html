@@ -3,50 +3,50 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <title>FreeLancelot</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
-        <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/prism.css")'>
-        <link rel="shortcut icon" type="image/png" href='@routes.Assets.versioned("images/favicon.png")'>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src='@routes.Assets.versioned("javascripts/main.js")' type="text/javascript"></script>
-        <script src='@routes.Assets.versioned("javascripts/prism.js")' type="text/javascript"></script>
-    </head>
+<head>
+    <title>FreeLancelot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
+    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/prism.css")'>
+    <link rel="shortcut icon" type="image/png" href='@routes.Assets.versioned("images/favicon.png")'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src='@routes.Assets.versioned("javascripts/main.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/prism.js")' type="text/javascript"></script>
+</head>
 
-    <body>
-        <section>
-            <div class="centeredBlock searchBlock">
-                <form id="searchForm">
-                    <input class="searchBar" id="searchKeyWords" type="text" name="query"
+<body>
+    <section>
+        <div class="centeredBlock searchBlock">
+            <form id="searchForm">
+                <input class="searchBar" id="searchKeyWords" type="text" name="query"
                     placeholder="Enter keywords here..." required></input>
-                    <input class="searchButton" type="submit" value="Search"></input>
-                </form>
-            </div>
-        </section>
-        <section>
-            <div id="resultList" class="centeredBlock">
-                    <!-- Place holder for tables -->
-            </div>
-        </section>
-    </body>
+                <input class="searchButton" type="submit" value="Search"></input>
+            </form>
+        </div>
+    </section>
+    <section>
+        <div id="resultList" class="centeredBlock">
+            <!-- Place holder for tables -->
+        </div>
+    </section>
+</body>
 
-    <script>
-            // Create WebSocket connection
-            const searchSocket = new WebSocket('ws://localhost:9000/searchSocket');
-            searchSocket.addEventListener("message", function (event) {
-                // Listen for message and add result as the top of the page
-                $('#resultList').prepend(displayResult(event.data));
-            });
+<script>
+    // Create WebSocket connection
+    const searchSocket = new WebSocket('ws://localhost:9000/searchSocket');
+    searchSocket.addEventListener("message", function (event) {
+        // Listen for message and add result as the top of the page
+        $('#resultList').prepend(displayResult(event.data));
+    });
 
-            $("#searchForm").submit(function (event) {
-                console.log("submit: " + $("#searchKeyWords").val());
-                event.preventDefault();
-                searchSocket.send(JSON.stringify({
-                    keywords: $("#searchKeyWords").val()
-                }));
-                return $("#searchKeyWords").val("");
-            });
-    </script>
+    $("#searchForm").submit(function (event) {
+        console.log("submit: " + $("#searchKeyWords").val());
+        event.preventDefault();
+        searchSocket.send(JSON.stringify({
+            keywords: $("#searchKeyWords").val()
+        }));
+        return $("#searchKeyWords").val("");
+    });
+</script>
 
 </html>

@@ -13,7 +13,6 @@ import actors.SearchActor;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
 import models.Project;
-import models.WordStatsProcessor;
 import play.cache.AsyncCacheApi;
 import play.libs.streams.ActorFlow;
 import play.libs.ws.WSClient;
@@ -35,7 +34,6 @@ public class HomeController extends Controller {
     ReadabilityService readabilityService;
     @Inject
     WSClient ws;
-
     @Inject
     public HomeController(
             ActorSystem actorSystem, Materializer materializer) {
@@ -112,4 +110,17 @@ public class HomeController extends Controller {
     public CompletionStage<Result> stats(long id) {
         return apiService.getSingleProject(id).thenApplyAsync(project -> ok(views.html.projectwordstats.render(project)));
     }
+
+    /**
+     * Renders the employer page of the application
+     *
+     * @param owner_id The employer id to be linked
+     * @return Play response and render of the employer page
+     *
+     * @author Haoyue Zhang
+     */
+    public CompletionStage<Result> employer(String owner_id){
+        return apiService.getUserInfo(owner_id).thenApplyAsync(owner-> {return ok(views.html.employer.render(owner,owner.projects));});
+    }
+
 }

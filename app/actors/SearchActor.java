@@ -2,6 +2,7 @@ package actors;
 
 import java.util.List;
 import java.util.concurrent.CompletionStage;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -42,17 +43,18 @@ public class SearchActor extends AbstractActor {
      * Sends an HTTP request to the API and extracts a list of Project objects out of it, then notifies the front end
      *
      * @param request The json data containing the keywords to use for the GET request
-     *
      * @author Whole group
      */
     private void onSendMessage(JsonNode request) {
 
-        CompletionStage<List<Project>> projectsPromise = apiService.getProjects(request.get("keywords").asText(), 10);
+        CompletionStage<List<Project>> projectsPromise = apiService.getProjects(request.get("keywords").asText(), 250);
         projectsPromise.thenApply(projectList -> {
-                    ObjectNode response = convertToJson(projectList);
+                    // Only need to display 10 projects
+                    List<Project> limitedProjectList = projectList.stream().limit(10).collect(Collectors.toList());
+                    ObjectNode response = convertToJson(limitedProjectList);
                     response.put("keywords", request.get("keywords").asText());
-                    if (!projectList.isEmpty()) {
-                        AverageReadability averageReadability = readabilityService.getAvgReadability(projectList);
+                    if (!limitedProjectList.isEmpty()) {
+                        AverageReadability averageReadability = readabilityService.getAvgReadability(limitedProjectList);
                         response.put("flesch_index", averageReadability.getFleschIndex());
                         response.put("FKGL", averageReadability.getFKGL());
                     }

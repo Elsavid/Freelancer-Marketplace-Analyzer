@@ -13,7 +13,6 @@ import actors.SearchActor;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
 import models.Project;
-import play.cache.AsyncCacheApi;
 import play.libs.streams.ActorFlow;
 import play.libs.ws.WSClient;
 import play.mvc.Controller;
@@ -25,7 +24,6 @@ import services.ReadabilityService;
 
 @Singleton
 public class HomeController extends Controller {
-    private AsyncCacheApi cache;
     private final ActorSystem actorSystem;
     private final Materializer materializer;
     @Inject
@@ -81,9 +79,7 @@ public class HomeController extends Controller {
      * @author Wenshu Li
      */
     public CompletionStage<Result> readability(String input) {
-        return CompletableFuture.supplyAsync(()->{
-              return ok(views.html.readability.render(readabilityService.getReadability(input)));
-        });
+        return CompletableFuture.supplyAsync(()-> ok(views.html.readability.render(readabilityService.getReadability(input))));
     }
 
     /**

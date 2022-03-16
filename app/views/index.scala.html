@@ -31,13 +31,20 @@
     </section>
 </body>
 
-<script>
-    // Create WebSocket connection
-    const searchSocket = new WebSocket('ws://localhost:9000/searchSocket');
-    searchSocket.addEventListener("message", function (event) {
-        // Listen for message and add result as the top of the page
-        $('#resultList').prepend(displayResult(event.data));
-    });
+    <script>
+            // Create WebSocket connection
+            const searchSocket = new WebSocket('ws://localhost:9000/searchSocket');
+            // Display only 10 results
+            let i = 0;
+            searchSocket.addEventListener("message", function (event) {
+                if (i >= 9) {
+                    $('#resultList').children().eq(9).remove();
+                } else {
+                    i++;
+                }
+                // Listen for message and add result as the top of the page
+                $('#resultList').prepend(displayResult(event.data));
+            });
 
     $("#searchForm").submit(function (event) {
         console.log("submit: " + $("#searchKeyWords").val());

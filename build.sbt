@@ -7,12 +7,13 @@ lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
 scalaVersion := "2.13.6"
 
-libraryDependencies += guice
-libraryDependencies += ws
-libraryDependencies += ehcache
-libraryDependencies += "com.typesafe.akka" %% "akka-testkit" % "2.6.18" % Test
-
-libraryDependencies += "com.github.sbt" % "junit-interface" % "0.13.3" % Test
+libraryDependencies ++= Seq(
+  guice,
+  ws,
+  caffeine,
+  "com.typesafe.akka" %% "akka-testkit" % "2.6.18" % Test,
+  "com.github.sbt" % "junit-interface" % "0.13.3" % Test
+)
 
 javaOptions in Test ++= Seq(
   "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=9998",

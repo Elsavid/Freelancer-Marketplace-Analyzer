@@ -21,6 +21,9 @@ public class ProjectToJsonParserTest {
     final private List<Project> emptyList = new ArrayList<>();
     private Project singleProject;
 
+    /**
+     * Instantiates tests fixture before each test (each class attributes)
+     */
     @Before
     public void initProjects() {
         projects = new ArrayList<>();
@@ -45,6 +48,9 @@ public class ProjectToJsonParserTest {
         singleProject.addSkill(new Skill(1, "bigSkill"));
     }
 
+    /**
+     * Tests the projectToJson conversion method (applied on a single Project object)
+     */
     @Test
     public void projectToJsonTest() {
         ObjectNode projectJson = projectToJson(singleProject);
@@ -55,6 +61,9 @@ public class ProjectToJsonParserTest {
         assertEquals("bigSkill", projectJson.get("skills").get(0).get("name").asText());
     }
 
+    /**
+     * Tests the convertToJson conversion method (applied on a Project objects list)
+     */
     @Test
     public void convertToJsonTest() {
         ObjectNode emptyResponse = convertToJson(emptyList);
@@ -79,7 +88,9 @@ public class ProjectToJsonParserTest {
     }
 
 
-
+    /**
+     * Tears down the tests fixture after each test case
+     */
     @After
     public void tearDownProjects() {
         projects = null;

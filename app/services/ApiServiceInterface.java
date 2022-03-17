@@ -16,7 +16,7 @@ public interface ApiServiceInterface {
     /**
      * Sends an HTTP request to the API to get a list of projects based on keywords
      *
-     * @param query The query to use for the request (including keywords)
+     * @param query The query to use for the request (keywords)
      * @param limit The maximum number of projects to return
      * @return A CompletionStage object containing a Project objects list
      */

@@ -5,15 +5,19 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ProjectTest {
 
     private Project project;
     private Project defaultProject;
 
+
+    /**
+     * Instantiates the two Project attributes of this class before each test (test fixture)
+     */
     @Before
     public void initProject() {
         project = new Project(
@@ -28,6 +32,9 @@ public class ProjectTest {
         defaultProject = new Project();
     }
 
+    /**
+     * Tests the getters of each final attribute of the Project class
+     */
     @Test
     public void finalFieldsTest() {
 
@@ -38,7 +45,7 @@ public class ProjectTest {
         assertEquals("", defaultProject.getOwnerId());
 
         assertEquals("Today", project.getSubmitDate());
-        assertEquals(null, defaultProject.getSubmitDate());
+        assertNull(defaultProject.getSubmitDate());
 
         assertEquals("Title", project.getTitle());
         assertEquals("", defaultProject.getTitle());
@@ -50,6 +57,9 @@ public class ProjectTest {
         assertEquals("", defaultProject.getPreviewDescription());
     }
 
+    /**
+     * Tests the getter and setter of the skills attribute of the Project class
+     */
     @Test
     public void skillsTest() {
         assertEquals(0, project.getSkills().size());
@@ -73,8 +83,9 @@ public class ProjectTest {
         assertEquals(0, defaultProject.getSkills().size());
     }
 
-
-
+    /**
+     * Tears down the tests fixture after each test case
+     */
     @After
     public void tearDown() {
         project = null;

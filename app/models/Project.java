@@ -12,10 +12,10 @@ public class Project {
     final private int id;
     final private String ownerId;
     final private String submitDate;
-    private String title;
-    private String type;
+    private final String title;
+    private final String type;
     private ArrayList<Skill> skills;
-    private String previewDescription;
+    private final String previewDescription;
     private Map<String, Long> wordStats;
 
     public Project() {
@@ -47,16 +47,8 @@ public class Project {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public ArrayList<Skill> getSkills() {

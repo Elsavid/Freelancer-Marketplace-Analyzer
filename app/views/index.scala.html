@@ -47,10 +47,9 @@
             });
 
     $("#searchForm").submit(function (event) {
-        console.log("submit: " + $("#searchKeyWords").val());
         event.preventDefault();
         searchSocket.send(JSON.stringify({
-            keywords: $("#searchKeyWords").val()
+            keywords: $("#searchKeyWords").val().toUpperCase()
         }));
         return $("#searchKeyWords").val("");
     });

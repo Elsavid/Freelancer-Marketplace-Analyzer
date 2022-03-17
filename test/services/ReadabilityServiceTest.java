@@ -1,6 +1,5 @@
 package services;
 
-import com.google.inject.Inject;
 import models.Project;
 import models.Readability;
 import org.junit.Test;
@@ -11,7 +10,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class ReadabilityTest {
+public class ReadabilityServiceTest {
     private static final String s = "Hello, how are you? I'm fine, and you? I'm pretty good. Okay, it's nice to talk to you, bye!";
     private static final String s2 = "What are you doing now?";
     ReadabilityService readabilityService = new ReadabilityService();

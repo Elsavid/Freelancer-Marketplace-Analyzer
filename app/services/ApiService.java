@@ -88,7 +88,7 @@ public class ApiService implements ApiServiceInterface {
      */
     public CompletionStage<Owner> getUserInfo(String owner_id) {
         return ws.url("https://www.freelancer.com/api/users/0.1/users/" + owner_id).get()
-                .thenCombine(ws.url("https://www.freelancer.com/api/projects/0.1/projects/?owners[]=" + owner_id + "&limit=10&job_details=true").get(),
+                .thenCombine(ws.url("https://www.freelancer.com/api/projects/0.1/projects/active?owners[]=" + owner_id + "&limit=10&job_details=true").get(),
                         (r1, r2) -> {
                             return new Owner(r1.getBody(), r2.getBody());
                         });

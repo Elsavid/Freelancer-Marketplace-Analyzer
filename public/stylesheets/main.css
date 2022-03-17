@@ -74,5 +74,19 @@ th {
 }
 
 .wordStatsTable {
-
+    margin: 2em;
+    text-align: center;
+    border-collapse: collapse;
+    border:solid black 3px;
+    border-radius:6px;
 }
+
+.wordStatsTable td, .wordStatsTable th {
+    padding: 0.5em;
+    border: dotted black 2px;
+}
+
+.wordStatsTable th {
+    background-color: lightsteelblue;
+}
+

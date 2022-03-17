@@ -78,20 +78,18 @@ public class ApiService implements ApiServiceInterface {
     }
 
     /**
-     * Sends an HTTP request to the API to get a owner model based on its ID
-     * the onwer model saves personal information and a project list of maximum 10 projects
+     * Sends an HTTP request to the API to get an owner model based on its ID
+     * the owner model saves personal information and a project list of maximum 10 projects
      *
      * @param owner_id The ID of the employer
-     * @return A CompletionStage Object containing a Owner object
+     * @return A CompletionStage Object containing an Owner object
      *
      * @author Haoyue Zhang
      */
     public CompletionStage<Owner> getUserInfo(String owner_id) {
         return ws.url("https://www.freelancer.com/api/users/0.1/users/" + owner_id).get()
-                .thenCombine(ws.url("https://www.freelancer.com/api/projects/0.1/projects/active?owners[]=" + owner_id + "&limit=10&job_details=true").get(),
-                        (r1, r2) -> {
-                            return new Owner(r1.getBody(), r2.getBody());
-                        });
+                .thenCombine(ws.url("https://www.freelancer.com/api/projects/0.1/projects/?owners[]=" + owner_id + "&limit=10&job_details=true").get(),
+                        (r1, r2) -> new Owner(r1.getBody(), r2.getBody()));
     }
 
     /**
@@ -111,7 +109,7 @@ public class ApiService implements ApiServiceInterface {
     /**
      * Parse a json response from the API into a list of Project objects
      *
-     * @param json The API reponse (json data containing projects data)
+     * @param json The API response (json data containing projects data)
      * @return A list of Project objects from the json data
      * @author Whole group
      */

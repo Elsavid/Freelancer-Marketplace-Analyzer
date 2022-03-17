@@ -116,7 +116,7 @@ public class HomeController extends Controller {
      * @author Haoyue Zhang
      */
     public CompletionStage<Result> employer(String owner_id){
-        return apiService.getUserInfo(owner_id).thenApplyAsync(owner-> {return ok(views.html.employer.render(owner,owner.projects));});
+        return apiService.getUserInfo(owner_id).thenApplyAsync(owner-> ok(views.html.employer.render(owner,owner.projects)));
     }
 
 }

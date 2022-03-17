@@ -12,24 +12,17 @@ public class Owner {
     public HashMap<String,String> userInfnormation = new HashMap<>();
     public List<Project> projects = new LinkedList<>();
     public String Id;
+    public boolean isParseSuccess;
+    public Owner(){
+    }
     public Owner(String userInfo,String proLists) {
-        String a = "\"suspended\": null";
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            JsonNode jsInfo = mapper.readTree(a);
-            System.out.println(jsInfo.isEmpty());
-            System.out.println(jsInfo.getNodeType());
-
-        }
-        catch (Exception e){
-            System.out.println("can not");
-        }
         try{
             parseUserInfo(userInfo);
             parseProjectLists(proLists);
+            isParseSuccess = true;
         }
         catch (JsonProcessingException e){
-            System.out.println("can not parse into json");
+            isParseSuccess = false;
         }
     }
 
@@ -38,8 +31,6 @@ public class Owner {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsInfo = mapper.readTree(userInfo).get("result");
         Id = jsInfo.get("id").toString();
-        System.out.println(jsInfo.getNodeType());
-        System.out.println(jsInfo.get("username").getNodeType());
         parseRecursively(jsInfo);
     }
     public void parseRecursively(JsonNode js){

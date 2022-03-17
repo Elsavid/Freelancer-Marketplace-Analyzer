@@ -22,23 +22,12 @@ public class Readability {
         return educationLevel;
     }
 
-    public void setEducationLevel(String educationLevel) {
-        this.educationLevel = educationLevel;
-    }
-
     public String getContents() {
         return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
     }
 
     public long getFKGL() {
         return FKGL;
     }
 
-    public void setFKGL(long FKGL) {
-        this.FKGL = FKGL;
-    }
 }

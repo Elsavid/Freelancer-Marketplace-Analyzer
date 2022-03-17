@@ -18,6 +18,9 @@ public class WordStatsProcessorTest {
     final private List<Project> emptyList = new ArrayList<>();
     private Project singleProject;
 
+    /**
+     * Instantiates tests fixture before each test case (Project object and Project list attributes)
+     */
     @Before
     public void initProjects() {
         projects = new ArrayList<>();
@@ -41,6 +44,9 @@ public class WordStatsProcessorTest {
         );
     }
 
+    /**
+     * Tests the globalWordsStats method for global statistics computing on a Project list
+     */
     @Test
     public void getGlobalWordStatsTest() {
         Map<String, Long> globalStats = getGlobalWordStats(projects);
@@ -68,6 +74,9 @@ public class WordStatsProcessorTest {
         assertEquals(0, emptyStats.entrySet().size());
     }
 
+    /**
+     * Tests the processProjectWordStats method for single-project statistics computing
+     */
     @Test
     public void processProjectWordStatsTest() {
         processProjectWordStats(singleProject);
@@ -88,6 +97,9 @@ public class WordStatsProcessorTest {
                 });
     }
 
+    /**
+     * Tests the mapToHtmlTable method for words statistics Map to HTML code conversion
+     */
     @Test
     public void mapToHtmlTableTest() {
         processProjectWordStats(singleProject);
@@ -98,7 +110,9 @@ public class WordStatsProcessorTest {
         assertTrue(statsTable.contains("<tr><td>with</td><td>1</td></tr>"));
     }
 
-
+    /**
+     * Tears down the tests fixture after each test case
+     */
     @After
     public void tearDownProjects() {
         projects = null;

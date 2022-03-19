@@ -24,11 +24,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static play.mvc.Results.ok;
 
+/**
+ * Tests the ApiService class
+ */
 public class ApiServiceTest {
     private ApiService apiService;
     private WSClient ws;
     private Server server;
 
+    /**
+     * Sets up test fixture
+     */
     @Before
     public void setup() {
         server = Server.forRouter(
@@ -59,6 +65,11 @@ public class ApiServiceTest {
         apiService = new ApiService(ws);
     }
 
+    /**
+     * Tears down test fixture
+     *
+     * @throws IOException
+     */
     @After
     public void tearDown() throws IOException {
         try {
@@ -70,7 +81,7 @@ public class ApiServiceTest {
 
     /**
      * Tests a http request sending, by using mock server
-     * 
+     *
      * @author Yan Ren
      */
     @Test
@@ -81,7 +92,7 @@ public class ApiServiceTest {
 
     /**
      * Mocks a request for skill data to the API
-     * 
+     *
      * @author Yan Ren
      */
     @Test
@@ -93,6 +104,8 @@ public class ApiServiceTest {
 
     /**
      * Mocks a request for multiple project data to the API
+     *
+     * @author Vincent Marechal
      */
     @Test
     public void testGetProjects() {
@@ -108,6 +121,8 @@ public class ApiServiceTest {
 
     /**
      * Mocks a request for a single project data to the API
+     *
+     * @author Vincent Marechal
      */
     @Test
     public void testGetSingleProject() {

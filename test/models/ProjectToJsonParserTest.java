@@ -15,6 +15,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Tests the ProjectToJsonParser class
+ *
+ * @author Vincent Marechal
+ */
 public class ProjectToJsonParserTest {
 
     private List<Project> projects;

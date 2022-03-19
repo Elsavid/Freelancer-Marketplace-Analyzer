@@ -11,6 +11,11 @@ import java.util.Map;
 import static models.WordStatsProcessor.*;
 import static org.junit.Assert.*;
 
+/**
+ * Tests the word stats processing feature
+ *
+ * @author Vincent Marechal
+ */
 public class WordStatsProcessorTest {
 
     private List<Project> projects;

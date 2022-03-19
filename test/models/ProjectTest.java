@@ -8,6 +8,11 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
+/**
+ * Tests for the Project class
+ *
+ * @author Vincent Marechal
+ */
 public class ProjectTest {
 
     private Project project;

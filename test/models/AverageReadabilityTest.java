@@ -7,6 +7,10 @@ import static org.junit.Assert.*;
 
 public class AverageReadabilityTest {
     private AverageReadability averageReadability;
+
+    /**
+     * Sets up test fixture
+     */
     @Before
     public void init(){
         averageReadability = new AverageReadability(
@@ -33,6 +37,9 @@ public class AverageReadabilityTest {
         assertEquals(0,Double.compare(8.0,averageReadability.getFKGL()));
     }
 
+    /**
+     * Tears down test fixture
+     */
     @After
     public void tearDown(){
         averageReadability = null;

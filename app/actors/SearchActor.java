@@ -20,6 +20,9 @@ import services.ReadabilityService;
 
 import static models.ProjectToJsonParser.convertToJson;
 
+/**
+ * @author Whole group
+ */
 public class SearchActor extends AbstractActor {
 
     private LoggingAdapter logger = Logging.getLogger(getContext().getSystem(), this);
@@ -27,10 +30,25 @@ public class SearchActor extends AbstractActor {
     ApiServiceInterface apiService;
     ReadabilityService readabilityService;
 
+    /**
+     * Props factory method
+     *
+     * @param out
+     * @param apiService
+     * @param readabilityService
+     * @return
+     */
     public static Props props(ActorRef out, ApiServiceInterface apiService, ReadabilityService readabilityService) {
         return Props.create(SearchActor.class, out, apiService, readabilityService);
     }
 
+    /**
+     * Parameterized constructor
+     *
+     * @param out
+     * @param apiService
+     * @param readabilityService
+     */
     @Inject
     public SearchActor(ActorRef out, ApiServiceInterface apiService, ReadabilityService readabilityService) {
         this.out = out;

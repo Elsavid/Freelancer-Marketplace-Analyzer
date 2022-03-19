@@ -5,10 +5,18 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+/**
+ * Tests the Readability class
+ *
+ * @author Wenshu Li
+ */
 public class ReadabilityTest {
     private String s;
     private Readability readability;
 
+    /**
+     * Sets up test fixture
+     */
     @Before
     public void init(){
         s = "Hello, how are you? I'm fine, and you? I'm pretty good. Okay, it's nice to talk to you, bye!";
@@ -45,6 +53,9 @@ public class ReadabilityTest {
         assertEquals(s,readability.getContents());
     }
 
+    /**
+     * Tears down test fixture
+     */
     @After
     public void teardown(){
         s = null;

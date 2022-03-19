@@ -16,7 +16,6 @@ import akka.stream.Materializer;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.Json;
-import services.ApiService;
 import services.ApiServiceInterface;
 import services.ApiServiceMock;
 import services.ReadabilityService;
@@ -31,6 +30,11 @@ public class SearchActorTest {
 
     Application application;
 
+    /**
+     * Sets up test fixture
+     *
+     * @author Yan Ren
+     */
     @Before
     public void setup() {
         system = ActorSystem.create();
@@ -40,6 +44,11 @@ public class SearchActorTest {
         readabilityService = new ReadabilityService();
     }
 
+    /**
+     * Tears down test fixture
+     *
+     * @author Yan Ren
+     */
     @After
     public void teardown() {
         TestKit.shutdownActorSystem(system);

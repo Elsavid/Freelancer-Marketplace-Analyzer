@@ -73,7 +73,10 @@ public class HomeController extends Controller {
     public CompletionStage<Result> skill(String skill) {
         CompletionStage<List<Project>> projectList = apiService.getSkill(skill);
         return projectList.toCompletableFuture().thenApplyAsync(projects -> {
-            return ok(views.html.skill.render(projects));
+            if (!projects.isEmpty()) {
+                return ok(views.html.skill.render(projects));
+            }
+            return ok("not found");
         });
     }
 

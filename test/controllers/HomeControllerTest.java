@@ -17,6 +17,9 @@ import services.ApiServiceInterface;
 import services.ApiServiceMock;
 
 import static play.inject.Bindings.bind;
+
+import java.util.concurrent.CompletionStage;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -73,5 +76,27 @@ public class HomeControllerTest extends WithApplication {
         WebSocket result = controller.searchSocket();
 
         assertEquals("play.mvc.WebSocket$1", result.getClass().getName());
+    }
+
+    /**
+     * Test the skill controller action
+     *
+     * @author Yan Ren
+     */
+    @Test
+    public final void testSkill() {
+        final HomeController controller = testApp.injector().instanceOf(HomeController.class);
+
+        CompletionStage<Result> skillResult = controller.skill("1");
+        try{
+            Result result = skillResult.toCompletableFuture().get();
+            String parsedResult = Helpers.contentAsString(result);
+            assertThat("Optional[text/html]", is(result.contentType().toString()));
+            assertThat(parsedResult, containsString("<h2>Skill</h2>"));
+            assertThat(parsedResult, containsString("<td>25385873</td>"));
+            assertThat(parsedResult, containsString("Mobile App Testing"));
+        } catch (Exception e){
+            System.out.println(e);
+        }
     }
 }

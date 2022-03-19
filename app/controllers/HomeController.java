@@ -20,6 +20,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.WebSocket;
 import services.ApiService;
+import services.ApiServiceInterface;
 import services.ReadabilityService;
 
 @Singleton
@@ -27,14 +28,13 @@ public class HomeController extends Controller {
     private final ActorSystem actorSystem;
     private final Materializer materializer;
     @Inject
-    ApiService apiService;
+    ApiServiceInterface apiService;
     @Inject
     ReadabilityService readabilityService;
     @Inject
     WSClient ws;
     @Inject
-    public HomeController(
-            ActorSystem actorSystem, Materializer materializer) {
+    public HomeController(ActorSystem actorSystem, Materializer materializer) {
         this.actorSystem = actorSystem;
         this.materializer = materializer;
     }
@@ -64,10 +64,7 @@ public class HomeController extends Controller {
     public CompletionStage<Result> skill(String skill) {
         CompletionStage<List<Project>> projectList = apiService.getSkill(skill);
         return projectList.toCompletableFuture().thenApplyAsync(projects -> {
-            if (!projects.isEmpty()) {
-                return ok(views.html.skill.render(projects));
-            }
-            return ok("not found");
+            return ok(views.html.skill.render(projects));
         });
     }
 

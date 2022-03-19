@@ -16,6 +16,7 @@ import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import models.*;
 import services.ApiService;
+import services.ApiServiceInterface;
 import services.ReadabilityService;
 
 import static models.ProjectToJsonParser.convertToJson;
@@ -24,15 +25,15 @@ public class SearchActor extends AbstractActor {
 
     private LoggingAdapter logger = Logging.getLogger(getContext().getSystem(), this);
     private final ActorRef out;
-    ApiService apiService;
+    ApiServiceInterface apiService;
     ReadabilityService readabilityService;
 
-    public static Props props(ActorRef out, ApiService apiService, ReadabilityService readabilityService) {
+    public static Props props(ActorRef out, ApiServiceInterface apiService, ReadabilityService readabilityService) {
         return Props.create(SearchActor.class, out, apiService, readabilityService);
     }
 
     @Inject
-    public SearchActor(ActorRef out, ApiService apiService, ReadabilityService readabilityService) {
+    public SearchActor(ActorRef out, ApiServiceInterface apiService, ReadabilityService readabilityService) {
         this.out = out;
         this.apiService = apiService;
         this.readabilityService = readabilityService;

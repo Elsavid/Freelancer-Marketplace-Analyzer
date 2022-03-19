@@ -6,6 +6,7 @@ import java.util.concurrent.CompletionStage;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import models.Owner;
 import models.Project;
 
 /**
@@ -55,6 +56,8 @@ public interface ApiServiceInterface {
      * @return A list of Project objects from the json data
      */
     CompletionStage<List<Project>> processAPIResponse(CompletableFuture<Object> json);
+
+    public CompletionStage<Owner> getUserInfo(String owner_id);
 
     Project createProjectFromJsonNode(JsonNode projectJson);
 }

@@ -4,7 +4,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import akka.actor.SupervisorStrategy.Restart;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.WebSocket;
@@ -20,11 +19,8 @@ import java.util.concurrent.CompletionStage;
 
 import static play.inject.Bindings.bind;
 
-import java.util.concurrent.CompletionStage;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;

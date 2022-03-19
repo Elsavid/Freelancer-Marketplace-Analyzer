@@ -30,7 +30,7 @@ import static play.inject.Bindings.bind;
 public class SearchActorTest {
     public static ActorSystem system;
     public static Materializer materializer;
-    public ApiService apiService;
+    public ApiServiceInterface apiService;
     public ReadabilityService readabilityService;
 
     Application application;
@@ -40,7 +40,7 @@ public class SearchActorTest {
         system = ActorSystem.create();
         application = new GuiceApplicationBuilder().overrides(bind(ApiServiceInterface.class).to(ApiServiceMock.class))
                 .build();
-        apiService = application.injector().instanceOf(ApiService.class);
+        apiService = application.injector().instanceOf(ApiServiceInterface.class);
         readabilityService = new ReadabilityService();
     }
 
@@ -55,7 +55,7 @@ public class SearchActorTest {
                 final ActorRef subject = system.actorOf(props);
 
                 ObjectNode testData = Json.newObject();
-                testData.put("keywords", "test");
+                testData.put("keywords", "testSearchActor");
                 subject.tell(testData, probeRef);
 
                 ObjectNode response = testProbe.expectMsgClass(ObjectNode.class);

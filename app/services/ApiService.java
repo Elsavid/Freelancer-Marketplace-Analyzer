@@ -1,5 +1,17 @@
 package services;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import models.Owner;
+import models.Project;
+import models.Skill;
+import org.springframework.util.StringUtils;
+import play.libs.ws.WSBodyReadables;
+import play.libs.ws.WSClient;
+import play.libs.ws.WSRequest;
+
+import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,20 +19,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-
-import models.Project;
-import models.Skill;
-import models.Owner;
-import org.springframework.util.StringUtils;
-import play.libs.ws.WSBodyReadables;
-import play.libs.ws.WSClient;
-import play.libs.ws.WSRequest;
 
 public class ApiService implements ApiServiceInterface {
 
@@ -33,8 +31,12 @@ public class ApiService implements ApiServiceInterface {
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
 
-    @Inject
     WSClient ws;
+
+    @Inject
+    public ApiService(WSClient ws) {
+        this.ws = ws;
+    }
 
     /**
      * Sends an HTTP request to the API to get a list of projects based on keywords
@@ -78,7 +80,8 @@ public class ApiService implements ApiServiceInterface {
 
     /**
      * Sends an HTTP request to the API to get an owner model based on its ID
-     * the owner model saves personal information and a project list of maximum 10 projects
+     * the owner model saves personal information and a project list of maximum 10
+     * projects
      *
      * @param owner_id The ID of the employer
      * @return A CompletionStage Object containing an Owner object
@@ -87,12 +90,15 @@ public class ApiService implements ApiServiceInterface {
      */
     public CompletionStage<Owner> getUserInfo(String owner_id) {
         return ws.url("https://www.freelancer.com/api/users/0.1/users/" + owner_id).get()
-                .thenCombine(ws.url("https://www.freelancer.com/api/projects/0.1/projects/?owners[]=" + owner_id + "&limit=10&job_details=true").get(),
+                .thenCombine(
+                        ws.url("https://www.freelancer.com/api/projects/0.1/projects/?owners[]=" + owner_id
+                                + "&limit=10&job_details=true").get(),
                         (r1, r2) -> new Owner(r1.getBody(), r2.getBody()));
     }
 
     /**
-     * Sends an HTTP request using a given url and returns the json data from the API response
+     * Sends an HTTP request using a given url and returns the json data from the
+     * API response
      *
      * @param url The url to use for the request
      * @return The json data from the API response
@@ -118,7 +124,8 @@ public class ApiService implements ApiServiceInterface {
             List<Project> projects = new ArrayList<>();
             String status = ((JsonNode) response).get("status").asText();
             if ("success".equals(status)) {
-                ((JsonNode) response).get("result").get("projects").forEach(item -> projects.add(createProjectFromJsonNode(item)));
+                ((JsonNode) response).get("result").get("projects")
+                        .forEach(item -> projects.add(createProjectFromJsonNode(item)));
             }
             return projects;
         });
@@ -132,7 +139,10 @@ public class ApiService implements ApiServiceInterface {
      * @author Whole group
      */
     public Project createProjectFromJsonNode(JsonNode projectJson) {
-        Project p = new Project(projectJson.get("id").asInt(), projectJson.get("owner_id").asText(), dateFormat.format(new Date(projectJson.get("submitdate").asLong() * 1000L)), StringUtils.capitalize(projectJson.get("title").asText().toLowerCase()), "", new ArrayList<>(), projectJson.get("preview_description").asText());
+        Project p = new Project(projectJson.get("id").asInt(), projectJson.get("owner_id").asText(),
+                dateFormat.format(new Date(projectJson.get("submitdate").asLong() * 1000L)),
+                StringUtils.capitalize(projectJson.get("title").asText().toLowerCase()), "", new ArrayList<>(),
+                projectJson.get("preview_description").asText());
         for (JsonNode skill : projectJson.get("jobs")) {
             p.addSkill(new Skill(skill.get("id").asInt(), skill.get("name").asText()));
         }

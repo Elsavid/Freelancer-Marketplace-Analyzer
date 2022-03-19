@@ -1,5 +1,10 @@
 package services;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import models.Owner;
+import models.Project;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -9,12 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import models.Owner;
-import models.Project;
 
 public class ApiServiceMock implements ApiServiceInterface {
 
@@ -28,7 +27,7 @@ public class ApiServiceMock implements ApiServiceInterface {
     public CompletionStage<List<Project>> getProjects(String query, int limit) {
         CompletableFuture<List<Project>> result = new CompletableFuture<>();
         new Thread(() -> {
-            Path fileName = Paths.get("./app/services/resources/getProjects.json");
+            Path fileName = Paths.get("./test/resources/getProjects.json");
             Charset charset = Charset.forName("ISO-8859-1");
             String jsonString = "";
             try {
@@ -44,7 +43,7 @@ public class ApiServiceMock implements ApiServiceInterface {
                 JsonNode node = mapper.readTree(jsonString);
                 List<Project> projectList = new ArrayList<>();
                 for (JsonNode project : node.get("result").get("projects")) {
-                    Project p = new ApiService().createProjectFromJsonNode(project);
+                    Project p = new ApiService(null).createProjectFromJsonNode(project);
                     projectList.add(p);
                 }
                 result.complete(projectList);
@@ -65,7 +64,7 @@ public class ApiServiceMock implements ApiServiceInterface {
      */
     public CompletionStage<List<Project>> getSkill(String query) {
         CompletableFuture<List<Project>> result = new CompletableFuture<>();
-        Path fileName = Paths.get("./app/services/resources/getSkill.json");
+        Path fileName = Paths.get("./test/resources/getSkill.json");
         Charset charset = Charset.forName("ISO-8859-1");
         String jsonString = "";
         try {
@@ -82,7 +81,7 @@ public class ApiServiceMock implements ApiServiceInterface {
             JsonNode node = mapper.readTree(jsonString);
             List<Project> projectList = new ArrayList<>();
             for (JsonNode project : node.get("result").get("projects")) {
-                Project p = new ApiService().createProjectFromJsonNode(project);
+                Project p = new ApiService(null).createProjectFromJsonNode(project);
                 projectList.add(p);
             }
             result.complete(projectList);

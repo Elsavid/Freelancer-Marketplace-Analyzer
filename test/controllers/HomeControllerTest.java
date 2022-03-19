@@ -4,7 +4,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import akka.actor.SupervisorStrategy.Restart;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.WebSocket;
@@ -16,13 +15,12 @@ import play.test.WithApplication;
 import services.ApiServiceInterface;
 import services.ApiServiceMock;
 
-import static play.inject.Bindings.bind;
-
 import java.util.concurrent.CompletionStage;
 
+import static play.inject.Bindings.bind;
+
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -98,5 +96,19 @@ public class HomeControllerTest extends WithApplication {
         } catch (Exception e){
             System.out.println(e);
         }
+    }
+
+    @Test
+    public final void testReadability(){
+        final HomeController controller = testApp.injector().instanceOf(HomeController.class);
+        CompletionStage<Result> csResult = controller.readability("How are your bro? I'm fine thank you, and you?");
+        csResult.whenComplete((r,e)->{
+            String parsedResult = Helpers.contentAsString(r);
+            assertThat("Optional[text/html]", is(r.contentType().toString()));
+            assertThat(parsedResult, containsString("Readability"));
+        }).exceptionally(e-> {
+            System.out.println(e);
+            return null;
+        });
     }
 }

@@ -68,12 +68,22 @@ public class ApiServiceTest {
         }
     }
 
+    /**
+     * Tests a http request sending, by using mock server
+     * 
+     * @author Yan Ren
+     */
     @Test
     public void testSendRequest() throws Exception {
         CompletableFuture<Object> resp = apiService.sendRequest("/testSendRequest");
         assertThat(resp.get().toString(), equalTo("[{\"testSendRequest\":\"ok\"}]"));
     }
 
+    /**
+     * Mocks a request for skill data to the API
+     * 
+     * @author Yan Ren
+     */
     @Test
     public void testGetSkill() throws Exception {
         apiService.skillQuery = "/getGetSkill";

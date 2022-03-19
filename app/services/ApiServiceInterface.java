@@ -21,41 +21,14 @@ public interface ApiServiceInterface {
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    /**
-     * Sends an HTTP request to the API to get a list of projects based on keywords
-     *
-     * @param query The query to use for the request (keywords)
-     * @param limit The maximum number of projects to return
-     * @return A CompletionStage object containing a Project objects list
-     */
     CompletionStage<List<Project>> getProjects(String query, int limit);
 
-    /**
-     * Sends an HTTP request to the API to get a list of projects based on skills
-     * 
-     * @author Yan Ren
-     * @param query The query to use for the request (a skill name)
-     * @return A CompletionStage object containing a Project objects list
-     */
     CompletionStage<List<Project>> getSkill(String query);
 
-    /**
-     * Sends an HTTP request to the API to get a single project based on its ID
-     *
-     * @param id The ID of the project being fetched
-     * @return A CompletionStage object containing a Project object
-     */
     CompletionStage<Project> getSingleProject(long id);
 
     CompletionStage<Owner> getUserInfo(String owner_id);
 
-    /**
-     * Sends an HTTP request using a given url and returns the json data from the
-     * API response
-     * 
-     * @param url The url to use for the request
-     * @return The json data from the API response
-     */
     CompletableFuture<Object> sendRequest(String url);
 
     /**

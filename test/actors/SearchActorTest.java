@@ -40,6 +40,17 @@ public class SearchActorTest {
         readabilityService = new ReadabilityService();
     }
 
+    @After
+    public void teardown() {
+        TestKit.shutdownActorSystem(system);
+        system = null;
+    }
+
+    /**
+     * Tests the search actor
+     * 
+     * @author Yan Ren
+     */
     @Test
     public void testSearchActor() {
 
@@ -60,11 +71,5 @@ public class SearchActorTest {
 
         };
 
-    }
-
-    @After
-    public void teardown() {
-        TestKit.shutdownActorSystem(system);
-        system = null;
     }
 }

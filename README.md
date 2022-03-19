@@ -45,9 +45,13 @@ You can continue to setup your preferred IDE by following [documentation](https:
 Navigate to project folder, run `sbt run`. After the message `Server started, ...` displays, enter the following URL in a browser: <http://localhost:9000>
 
 
-## Running the tests
+## Supported SBT commands
 
-Explain how to run the automated tests for this system
+- `sbt run` : Start project in <http://localhost:9000>
+- `sbt test` : Run all test cases
+- `sbt jacoco` : Generate Java code coverage, available in `SOEN6441/target/scala-2.13/jacoco/report`
+- `sbt doc` : SBT default doc generation task, which generates the Scaladoc in `SOEN6441/target/scala-2.13/api`
+- `sbt genjavadoc:doc` : Customized SBT doc generation task, which generates the Javadoc in `SOEN6441/target/scala-2.13/genjavadoc-api` Note: after first run `sbt genjavadoc:doc`, if you wish to regenerate the javadoc, you need to run `sbt clean`, then `sbt genjavadoc:doc`
 
 ## Built With
 

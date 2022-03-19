@@ -3,7 +3,7 @@ organization := "com.example"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava)
+lazy val root = (project in file(".")).enablePlugins(PlayJava).configs(Javadoc).settings(javadocSettings: _*)
 
 scalaVersion := "2.13.6"
 
@@ -23,12 +23,17 @@ javaOptions in Test ++= Seq(
   "-XX:MaxPermSize=384M"
 )
 
-// Compile the project before generating Eclipse files, so
-// that generated .scala or .class files for views and routes are present
-//EclipseKeys.preTasks := Seq(compile in Compile, compile in Test)
+lazy val Javadoc = config("genjavadoc") extend Compile
 
-// Java project. Don't expect Scala IDE
-//EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
+lazy val javadocSettings = inConfig(Javadoc)(Defaults.configSettings) ++ Seq(
+  addCompilerPlugin("com.typesafe.genjavadoc" %% "genjavadoc-plugin" % "0.18" cross CrossVersion.full),
+  scalacOptions += s"-P:genjavadoc:out=${target.value}/java",
+  Compile / packageDoc := (Javadoc / packageDoc).value,
+  Javadoc / sources :=
+    (target.value / "java" ** "*.java").get ++
+    (Compile / sources).value.filter(_.getName.endsWith(".java")),
+  Javadoc / javacOptions := Seq(),
+  Javadoc / packageDoc / artifactName := ((sv, mod, art) =>
+    "" + mod.name + "_" + sv.binary + "-" + mod.revision + "-javadoc.jar")
+)
 
-// Use .class files instead of generated .scala files for views and routes
-//EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)

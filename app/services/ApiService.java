@@ -15,7 +15,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 
-
+/**
+ * ApiService contains concrete implementation for ApiServiceInterface
+ */
 public class ApiService implements ApiServiceInterface {
 
     public static String projectQuery = "https://www.freelancer.com/api/projects/0.1/projects/";

@@ -16,6 +16,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
+/**
+ * ApiServiceMock contains mock function for ApiServiceInterface used for testing
+ */
 public class ApiServiceMock implements ApiServiceInterface {
 
     /**
@@ -24,7 +27,6 @@ public class ApiServiceMock implements ApiServiceInterface {
      * @param query The query to use for the request (not used here)
      * @param limit The maximum number of projects to return (see getProjects.json)
      * @return A CompletionStage object containing a Project objects list
-     *
      * @author Whole group
      */
     public CompletionStage<List<Project>> getProjects(String query, int limit) {
@@ -32,7 +34,8 @@ public class ApiServiceMock implements ApiServiceInterface {
         CompletableFuture<List<Project>> result = new CompletableFuture<>();
         try {
             Path fileName = Paths.get("./test/resources/getProjects.json");
-            String jsonString = Files.readAllLines(fileName, Charset.forName("ISO-8859-1")).stream().collect(Collectors.joining());
+            String jsonString = Files.readAllLines(fileName, Charset.forName("ISO-8859-1")).stream()
+                    .collect(Collectors.joining());
 
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonResult = mapper.readTree(jsonString);
@@ -41,7 +44,8 @@ public class ApiServiceMock implements ApiServiceInterface {
             jsonResult.get("result")
                     .get("projects")
                     .spliterator()
-                    .forEachRemaining(jsonProject -> projectList.add(ApiServiceInterface.createProjectFromJsonNode(jsonProject)));
+                    .forEachRemaining(
+                            jsonProject -> projectList.add(ApiServiceInterface.createProjectFromJsonNode(jsonProject)));
             result.complete(projectList);
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,7 +101,8 @@ public class ApiServiceMock implements ApiServiceInterface {
         CompletableFuture<Project> result = new CompletableFuture<>();
         try {
             Path fileName = Paths.get("./test/resources/singleProject.json");
-            String jsonString = Files.readAllLines(fileName, Charset.forName("ISO-8859-1")).stream().collect(Collectors.joining());
+            String jsonString = Files.readAllLines(fileName, Charset.forName("ISO-8859-1")).stream()
+                    .collect(Collectors.joining());
             JsonNode jsonResult = new ObjectMapper().readTree(jsonString);
             result.complete(ApiServiceInterface.createProjectFromJsonNode(jsonResult.get("result")));
         } catch (IOException e) {
@@ -106,11 +111,17 @@ public class ApiServiceMock implements ApiServiceInterface {
         return result;
     }
 
+    /**
+     * Placeholder mock function, not used in testing
+     */
     @Override
     public CompletableFuture<Object> sendRequest(String url) {
         return null;
     }
 
+    /**
+     * Placeholder mock function, not used in testing
+     */
     @Override
     public CompletionStage<Owner> getUserInfo(String owner_id) {
         return null;

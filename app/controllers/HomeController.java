@@ -51,13 +51,23 @@ public class HomeController extends Controller {
         return ok(views.html.index.render(request));
     }
 
+    /**
+     * Creates the websocket connections fo the keywords search request
+     * 
+     * @return websocket connection
+     * 
+     * @author Yan Ren
+     */
     public WebSocket searchSocket() {
         return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> SearchActor.props(out, apiService, readabilityService), actorSystem, materializer));
     }
 
     /**
-     * @param skill
-     * @return
+     * Renders the skill page of the application
+     * 
+     * @param skill An skill id used for request query
+     * @return Render of the skill page
+     * 
      * @author Yan Ren
      */
     public CompletionStage<Result> skill(String skill) {
@@ -116,5 +126,4 @@ public class HomeController extends Controller {
     public CompletionStage<Result> employer(String owner_id) {
         return apiService.getUserInfo(owner_id).thenApplyAsync(owner -> ok(views.html.employer.render(owner, owner.projects)));
     }
-
 }

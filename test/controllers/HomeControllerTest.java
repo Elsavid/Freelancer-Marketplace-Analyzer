@@ -171,7 +171,11 @@ public class HomeControllerTest extends WithApplication {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Tests the readability controller
+     *
+     * @author Wenshu Li
+     */
 
     @Test
     public final void testReadability() {

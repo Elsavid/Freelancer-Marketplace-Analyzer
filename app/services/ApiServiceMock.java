@@ -13,12 +13,13 @@ import java.util.concurrent.CompletionStage;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import models.Owner;
 import models.Project;
 
 public class ApiServiceMock implements ApiServiceInterface {
 
     /**
-     * Sends an HTTP request to the API to get a list of projects based on keywords
+     * Mock an HTTP request to the API to get a list of projects based on keywords
      *
      * @param query The query to use for the request (keywords)
      * @param limit The maximum number of projects to return
@@ -27,7 +28,7 @@ public class ApiServiceMock implements ApiServiceInterface {
     public CompletionStage<List<Project>> getProjects(String query, int limit) {
         CompletableFuture<List<Project>> result = new CompletableFuture<>();
         new Thread(() -> {
-            Path fileName = Paths.get("./app/services/github/resources/getProjects.json");
+            Path fileName = Paths.get("./app/services/resources/getProjects.json");
             Charset charset = Charset.forName("ISO-8859-1");
             String jsonString = "";
             try {
@@ -56,14 +57,39 @@ public class ApiServiceMock implements ApiServiceInterface {
     }
 
     /**
-     * Sends an HTTP request to the API to get a list of projects based on skills
+     * Mock an HTTP request to the API to get a list of projects based on skills
      * 
      * @author Yan Ren
      * @param query The query to use for the request (a skill name)
      * @return A CompletionStage object containing a Project objects list
      */
     public CompletionStage<List<Project>> getSkill(String query) {
-        return null;
+        CompletableFuture<List<Project>> result = new CompletableFuture<>();
+        Path fileName = Paths.get("./app/services/resources/getSkill.json");
+        Charset charset = Charset.forName("ISO-8859-1");
+        String jsonString = "";
+        try {
+            List<String> lines = Files.readAllLines(fileName, charset);
+            for (String line : lines) {
+                jsonString += line;
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(jsonString);
+            List<Project> projectList = new ArrayList<>();
+            for (JsonNode project : node.get("result").get("projects")) {
+                Project p = new ApiService().createProjectFromJsonNode(project);
+                projectList.add(p);
+            }
+            result.complete(projectList);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        return result;
     }
 
     /**
@@ -98,6 +124,11 @@ public class ApiServiceMock implements ApiServiceInterface {
     }
 
     public Project createProjectFromJsonNode(JsonNode projectJson) {
+        return null;
+    }
+
+    @Override
+    public CompletionStage<Owner> getUserInfo(String owner_id) {
         return null;
     }
 }

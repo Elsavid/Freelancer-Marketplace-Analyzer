@@ -57,7 +57,6 @@ public class ApiService implements ApiServiceInterface {
      * @param query The query to use for the request (a skill name)
      * @return A CompletionStage object containing a Project objects list
      * @author Yan Ren
-     * @author Yan Ren
      */
     public CompletionStage<List<Project>> getSkill(String query) {
         CompletableFuture<Object> resp = sendRequest(ApiService.skillQuery + query);

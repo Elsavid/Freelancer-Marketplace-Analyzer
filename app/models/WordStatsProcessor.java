@@ -37,6 +37,9 @@ public class WordStatsProcessor {
      * @return The given Project, updated
      */
     public static Project processProjectWordStats(Project p) {
+        if (p == null) {
+            return null;
+        }
         Map<String, Long> stats = Arrays.stream(p.getPreviewDescription()
                         .replaceAll("[^a-zA-Z0-9\\s]", " ")
                         .split("\\s+"))
@@ -57,6 +60,9 @@ public class WordStatsProcessor {
      * @return A String containing HTML code
      */
     public static String mapToHtmlTable(Map<String, Long> wordStats) {
+        if (wordStats == null) {
+            return "";
+        }
         String table = "<table class=\"wordStatsTable\"><thead><tr><th>Word</th><th>Number of appearances</th></tr></thead>";
         for (Map.Entry e : wordStats.entrySet()) {
             table += "<tr><td>" + e.getKey() + "</td><td>" + e.getValue() + "</td></tr>";

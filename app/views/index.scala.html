@@ -3,33 +3,32 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <title>FreeLancelot</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
-    <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/prism.css")'>
-    <link rel="shortcut icon" type="image/png" href='@routes.Assets.versioned("images/favicon.png")'>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src='@routes.Assets.versioned("javascripts/main.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/prism.js")' type="text/javascript"></script>
-</head>
+    <head>
+        <title>FreeLancelot</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
+        <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/prism.css")'>
+        <link rel="shortcut icon" type="image/png" href='@routes.Assets.versioned("images/favicon.png")'>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src='@routes.Assets.versioned("javascripts/main.js")' type="text/javascript"></script>
+        <script src='@routes.Assets.versioned("javascripts/prism.js")' type="text/javascript"></script>
+    </head>
 
-<body>
-    <section>
-        <div class="centeredBlock searchBlock">
-            <form id="searchForm">
-                <input class="searchBar" id="searchKeyWords" type="text" name="query"
-                    placeholder="Enter keywords here..." required></input>
-                <input class="searchButton" type="submit" value="Search"></input>
-            </form>
-        </div>
-    </section>
-    <section>
-        <div id="resultList" class="centeredBlock">
-            <!-- Place holder for tables -->
-        </div>
-    </section>
-</body>
+    <body>
+        <section>
+            <div class="centeredBlock searchBlock">
+                <form id="searchForm">
+                    <input class="searchBar" id="searchKeyWords" type="text" name="query" placeholder="Enter keywords here..." required></input>
+                    <input class="searchButton" type="submit" value="Search"></input>
+                </form>
+            </div>
+        </section>
+        <section>
+            <div id="resultList" class="centeredBlock">
+                    <!-- Place holder for tables -->
+            </div>
+        </section>
+    </body>
 
     <script>
             // Create WebSocket connection
@@ -46,13 +45,13 @@
                 $('#resultList').prepend(displayResult(event.data));
             });
 
-    $("#searchForm").submit(function (event) {
-        event.preventDefault();
-        searchSocket.send(JSON.stringify({
-            keywords: $("#searchKeyWords").val().toUpperCase()
-        }));
-        return $("#searchKeyWords").val("");
-    });
+            $("#searchForm").submit(function (event) {
+                event.preventDefault();
+                searchSocket.send(JSON.stringify({
+                    keywords: $("#searchKeyWords").val().toUpperCase()
+                }));
+                return $("#searchKeyWords").val("");
+            });
 </script>
 
 </html>

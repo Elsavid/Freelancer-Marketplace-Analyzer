@@ -2,8 +2,6 @@ package actors;
 
 import static org.junit.Assert.assertTrue;
 
-import java.time.Duration;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.junit.After;
@@ -15,9 +13,7 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.stream.Materializer;
-import akka.stream.impl.io.InputStreamSinkStage.Data;
 import play.Application;
-import play.cache.AsyncCacheApi;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.Json;
 import services.ApiService;
@@ -59,7 +55,7 @@ public class SearchActorTest {
                 subject.tell(testData, probeRef);
 
                 ObjectNode response = testProbe.expectMsgClass(ObjectNode.class);
-                assertTrue(response.get("projects").size() > 0 ? true : false);
+                assertTrue(response.get("projects").size() > 0);
             }
 
         };

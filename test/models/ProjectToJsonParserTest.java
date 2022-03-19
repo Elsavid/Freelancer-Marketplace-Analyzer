@@ -59,6 +59,8 @@ public class ProjectToJsonParserTest {
         assertEquals("Project title", projectJson.get("title").asText());
         assertEquals(1, projectJson.get("skills").size());
         assertEquals("bigSkill", projectJson.get("skills").get(0).get("name").asText());
+        // Null project case
+        assertEquals(0, projectToJson(null).size());
     }
 
     /**
@@ -66,11 +68,13 @@ public class ProjectToJsonParserTest {
      */
     @Test
     public void convertToJsonTest() {
+        // Empty list
         ObjectNode emptyResponse = convertToJson(emptyList);
         assertEquals(1, emptyResponse.size());
         assertEquals(ObjectNode.class, emptyResponse.get("projects").getClass());
         assertEquals(0, emptyResponse.get("projects").size());
 
+        // Filled list
         ObjectNode response = convertToJson(projects);
         assertEquals(1, response.size());
         assertEquals(ObjectNode.class, response.get("projects").getClass());

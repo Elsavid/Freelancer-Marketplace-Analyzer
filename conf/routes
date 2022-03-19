@@ -8,7 +8,7 @@ GET        /                             controllers.HomeController.index(reques
 GET        /searchSocket                 controllers.HomeController.searchSocket
 GET        /readability/:input           controllers.HomeController.readability(input: String)
 GET        /skill/:skill                 controllers.HomeController.skill(skill: String)
-GET        /searchstats/:keywords        controllers.HomeController.globalStats(keywords: String)
+GET        /searchstats/:keywords        controllers.HomeController.searchStats(keywords: String)
 GET        /stats/:id                    controllers.HomeController.stats(id: Long)
 
 #employer profile @author:Haoyue

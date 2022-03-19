@@ -4,10 +4,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import java.util.ArrayList;
+
+import static org.junit.Assert.*;
 
 public class ProjectTest {
 
@@ -81,6 +80,38 @@ public class ProjectTest {
         assertEquals(s3, project.getSkills().get(0));
 
         assertEquals(0, defaultProject.getSkills().size());
+    }
+
+    /**
+     * Tests the equals method from the Project class
+     */
+    @Test
+    public void testEquals() {
+
+        Project p1 = new Project(
+                12345,
+                "owner",
+                "Today",
+                "Title",
+                "type",
+                new ArrayList<>(),
+                "description"
+        );
+
+        Project p2 = new Project(
+                6789,
+                "owner",
+                "Today",
+                "New title",
+                "type",
+                new ArrayList<>(),
+                "Another description"
+        );
+
+        assertTrue(project.equals(p1));
+        assertFalse(project.equals(p2));
+        assertFalse(project.equals(defaultProject));
+        assertFalse(project.equals(null));
     }
 
     /**

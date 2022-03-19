@@ -19,7 +19,6 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.WebSocket;
-import services.ApiService;
 import services.ApiServiceInterface;
 import services.ReadabilityService;
 
@@ -33,6 +32,7 @@ public class HomeController extends Controller {
     ReadabilityService readabilityService;
     @Inject
     WSClient ws;
+
     @Inject
     public HomeController(ActorSystem actorSystem, Materializer materializer) {
         this.actorSystem = actorSystem;
@@ -52,8 +52,7 @@ public class HomeController extends Controller {
     }
 
     public WebSocket searchSocket() {
-        return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> SearchActor.props(out, apiService, readabilityService),
-                actorSystem, materializer));
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> SearchActor.props(out, apiService, readabilityService), actorSystem, materializer));
     }
 
     /**
@@ -70,13 +69,14 @@ public class HomeController extends Controller {
 
     /**
      * Renders the readability page of application
+     * 
      * @param input The pre_description field text
      * @return Render of the readability page
      *
      * @author Wenshu Li
      */
     public CompletionStage<Result> readability(String input) {
-        return CompletableFuture.supplyAsync(()-> ok(views.html.readability.render(readabilityService.getReadability(input))));
+        return CompletableFuture.supplyAsync(() -> ok(views.html.readability.render(readabilityService.getReadability(input))));
     }
 
     /**
@@ -87,7 +87,7 @@ public class HomeController extends Controller {
      *
      * @author Vincent Marechal
      */
-    public CompletionStage<Result> globalStats(String encodedKeywords) {
+    public CompletionStage<Result> searchStats(String encodedKeywords) {
         // Decode keywords
         String keywords = URLDecoder.decode(encodedKeywords, StandardCharsets.UTF_8);
         return apiService.getProjects(keywords, 250).thenApplyAsync(projects -> ok(views.html.globalwordstats.render(keywords, projects)));
@@ -95,6 +95,7 @@ public class HomeController extends Controller {
 
     /**
      * Renders the words statistics page of the application (for a given project)
+     * 
      * @param id The ID of the project to analyze
      * @return Play response and render of the project words statistics page
      *
@@ -112,8 +113,8 @@ public class HomeController extends Controller {
      *
      * @author Haoyue Zhang
      */
-    public CompletionStage<Result> employer(String owner_id){
-        return apiService.getUserInfo(owner_id).thenApplyAsync(owner-> ok(views.html.employer.render(owner,owner.projects)));
+    public CompletionStage<Result> employer(String owner_id) {
+        return apiService.getUserInfo(owner_id).thenApplyAsync(owner -> ok(views.html.employer.render(owner, owner.projects)));
     }
 
 }

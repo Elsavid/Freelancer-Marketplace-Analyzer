@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import static models.WordStatsProcessor.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class WordStatsProcessorTest {
 
@@ -79,6 +78,7 @@ public class WordStatsProcessorTest {
      */
     @Test
     public void processProjectWordStatsTest() {
+        assertNull(processProjectWordStats(null));
         processProjectWordStats(singleProject);
         assertEquals(11, singleProject.getWordStats().entrySet().size());
         singleProject.getWordStats()
@@ -102,6 +102,7 @@ public class WordStatsProcessorTest {
      */
     @Test
     public void mapToHtmlTableTest() {
+        assertEquals("", mapToHtmlTable(null));
         processProjectWordStats(singleProject);
         String statsTable = mapToHtmlTable(singleProject.getWordStats());
         assertTrue(statsTable.startsWith("<table class=\"wordStatsTable\"><thead><tr><th>Word</th><th>Number of appearances</th></tr></thead>"));

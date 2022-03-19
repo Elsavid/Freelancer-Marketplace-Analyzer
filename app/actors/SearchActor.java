@@ -15,7 +15,6 @@ import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import models.*;
-import services.ApiService;
 import services.ApiServiceInterface;
 import services.ReadabilityService;
 

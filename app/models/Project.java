@@ -145,4 +145,24 @@ public class Project {
     public void setWordStats(Map<String, Long> wordStats) {
         this.wordStats = wordStats;
     }
+
+    /**
+     * Checks that two Projects are equal
+     *
+     * @param o An Object to compare this with
+     * @return True if equals, false otherwise
+     */
+    public boolean equals(Object o) {
+        if (o == null || !o.getClass().equals(this.getClass())) {
+            return false;
+        } else {
+            Project p = (Project) o;
+            return (p.getId() == this.getId()
+                    && p.getOwnerId().equals(this.getOwnerId())
+                    && p.getTitle().equals(this.getTitle()))
+                    && p.getSubmitDate().equals(this.getSubmitDate())
+                    && p.getPreviewDescription().equals(this.getPreviewDescription())
+                    && p.getType().equals(this.getType());
+        }
+    }
 }

@@ -1,24 +1,40 @@
 package models;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class AverageReadabilityTest {
+    private AverageReadability averageReadability;
+    @Before
+    public void init(){
+        averageReadability = new AverageReadability(
+                119.5,
+                8.0);
+    }
+    /**
+     * Tests the Parameterized constructor
+     */
     @Test
     public void AverageReadabilityConstructorTest(){
-        AverageReadability averageReadability = new AverageReadability(119.5,8.0);
-        assertNotNull(averageReadability);
+        AverageReadability averageReadability = new AverageReadability(
+                119.5,
+                8.0);
+        assertEquals(0,Double.compare(this.averageReadability.getFKGL(),averageReadability.getFKGL()));
+        assertEquals(0,Double.compare(this.averageReadability.getFleschIndex(),averageReadability.getFleschIndex()));
     }
-
+    /**
+     * Tests the getters
+     */
     @Test
-    public void getFleschIndexTest(){
-        AverageReadability averageReadability = new AverageReadability(119.5,8.0);
+    public void getMethodsTest(){
         assertEquals(0,Double.compare(119.5,averageReadability.getFleschIndex()));
+        assertEquals(0,Double.compare(8.0,averageReadability.getFKGL()));
     }
 
-    @Test
-    public void getFKGLTest(){
-        AverageReadability averageReadability = new AverageReadability(119.5,8.0);
-        assertEquals(0,Double.compare(8.0,averageReadability.getFKGL()));
+    @After
+    public void tearDown(){
+        averageReadability = null;
     }
 }

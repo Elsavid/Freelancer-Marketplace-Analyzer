@@ -2,6 +2,8 @@ package services;
 
 import models.Project;
 import models.Readability;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -11,22 +13,34 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class ReadabilityServiceTest {
-    private static final String s = "Hello, how are you? I'm fine, and you? I'm pretty good. Okay, it's nice to talk to you, bye!";
-    private static final String s2 = "What are you doing now?";
-    ReadabilityService readabilityService = new ReadabilityService();
-    List<Project> projects = Arrays.asList(
-            new Project(0,"",null,"","",new ArrayList<>(),"Hello, how are you? I'm fine, and you? I'm pretty good. Okay, it's nice to talk to you, bye!"),
-            new Project(0,"",null,"","",new ArrayList<>(),"What are you doing now?"));
+    private String s;
+    private String s2;
+    private ReadabilityService readabilityService;
+    private List<Project> projects;
 
+    @Before
+    public void init(){
+        s = "Hello, how are you? I'm fine, and you? I'm pretty good. Okay, it's nice to talk to you, bye!";
+        s2 = "What are you doing now?";
+        readabilityService = new ReadabilityService();
+        projects = Arrays.asList(
+                new Project(0,"",null,"","",new ArrayList<>(),"Hello, how are you? I'm fine, and you? I'm pretty good. Okay, it's nice to talk to you, bye!"),
+                new Project(0,"",null,"","",new ArrayList<>(),"What are you doing now?"));
+    }
+
+    /**
+     * Tests the average readability of these projects
+     */
     @Test
     public void getAvgReadability(){
         System.out.println(readabilityService.getAvgReadability(projects).getFleschIndex());
         System.out.println(readabilityService.getAvgReadability(projects).getFKGL());
         assertEquals(0,Double.compare(119.5,readabilityService.getAvgReadability(projects).getFleschIndex()));
         assertEquals(0,Double.compare(-2.5,readabilityService.getAvgReadability(projects).getFKGL()));
-//        assertNotNull(readabilityService.getAvgReadability(projects).getFleschIndex());
-//        assertNotNull(readabilityService.getAvgReadability(projects).getFKGL());
     }
+    /**
+     * Tests the single readability of a project
+     */
     @Test
     public void getReadabilityTest(){
         //assertEquals(new Readability(),readabilityService.getReadability(s));
@@ -41,23 +55,37 @@ public class ReadabilityServiceTest {
         assertEquals("Early",r2.getEducationLevel());
         assertEquals(s,r2.getContents());
     }
-
+    /**
+     * Tests the total sentences in a context of a project
+     */
     @Test
     public void countTotalSentencesTest(){
         assertEquals(4,readabilityService.countTotalSentences(s));
     }
+    /**
+     * Tests the total words in a context of a project
+     */
     @Test
     public void countTotalWordsTest(){
         assertEquals(19,readabilityService.countTotalWords(s));
     }
+    /**
+     * Tests the total syllables in a context of a project
+     */
     @Test
     public void countTotalSyllablesTest(){
         assertEquals(18,readabilityService.countTotalSyllables(s));
     }
+    /**
+     * Tests the syllables in a single word
+     */
     @Test
     public void countSyllableInSingleWordTest(){
         assertEquals(1,readabilityService.countSyllableInSingleWord("bye"));
     }
+    /**
+     * Tests the assessment method of education level
+     */
     @Test
     public void getEducationLevelTest(){
         assertEquals("Early",readabilityService.getEducationLevel(105));
@@ -70,5 +98,13 @@ public class ReadabilityServiceTest {
         assertEquals("Some College",readabilityService.getEducationLevel(32));
         assertEquals("College Graduate",readabilityService.getEducationLevel(30));
         assertEquals("Law School Graduate",readabilityService.getEducationLevel(0));
+    }
+
+    @After
+    public void tearDown(){
+        s=null;
+        s2=null;
+        readabilityService = null;
+        projects = null;
     }
 }

@@ -22,7 +22,8 @@ public class ApiService implements ApiServiceInterface {
 
     public static String projectQuery = "https://www.freelancer.com/api/projects/0.1/projects/";
     public static String skillQuery = "https://www.freelancer.com/api/projects/0.1/projects/active?limit=10&job_details=true&jobs[]=";
-
+    public static String userQuery = "https://www.freelancer.com/api/users/0.1/users/";
+    public static String userProjectQuery = "https://www.freelancer.com/api/projects/0.1/projects/?active&owners[]=";
     private final Cache<String, CompletionStage<List<Project>>> cache = Caffeine.newBuilder()
             .maximumSize(10)
             .expireAfterWrite(5, TimeUnit.MINUTES)
@@ -83,10 +84,9 @@ public class ApiService implements ApiServiceInterface {
      * @author Haoyue Zhang
      */
     public CompletionStage<Owner> getUserInfo(String owner_id) {
-        return ws.url("https://www.freelancer.com/api/users/0.1/users/" + owner_id).get()
-                .thenCombine(
-                        ws.url("https://www.freelancer.com/api/projects/0.1/projects/?owners[]=" + owner_id
-                                + "&limit=10&job_details=true").get(),
+        String url1 = userQuery+ owner_id;
+        return ws.url(url1).get()
+                .thenCombine(ws.url(userProjectQuery + owner_id + "&limit=10&job_details=true").get(),
                         (r1, r2) -> new Owner(r1.getBody(), r2.getBody()));
     }
 

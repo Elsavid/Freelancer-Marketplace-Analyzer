@@ -189,4 +189,24 @@ public class HomeControllerTest extends WithApplication {
             return null;
         });
     }
+    /**
+     * Tests the employer controller
+     *
+     * @author Haoyue Zhang
+     */
+    @Test
+    public final void employerTest() {
+        CompletionStage<Result> employerResult = controller.employer("61317541");
+        employerResult.whenComplete((r, e) -> {
+            String parsedResult = Helpers.contentAsString(r);
+            assertThat("Optional[text/html]", is(r.contentType().toString()));
+            assertTrue(parsedResult.contains("<h1>Information of employer 61317541</h1>"));
+            assertTrue(parsedResult.contains("<tr><td>username</td><td>KashishD4761</td></tr>"));
+
+        }).exceptionally(e -> {
+            System.out.println(e);
+            return null;
+        });
+
+    }
 }

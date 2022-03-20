@@ -124,6 +124,15 @@ public class ApiServiceMock implements ApiServiceInterface {
      */
     @Override
     public CompletionStage<Owner> getUserInfo(String owner_id) {
-        return null;
+       CompletableFuture<Owner> result = new CompletableFuture<>();
+//        try {
+//            Path fileName1 = Paths.get("./test/resources/getOwner.json");
+//            Path fileName2 = Paths.get("./test/resources/getOwnerProjects.json");
+//            String jsonString1 = Files.readAllLines(fileName1, Charset.forName("ISO-8859-1")).stream()
+//                    .collect(Collectors.joining());
+//            String jsonString2 = Files.readAllLines(fileName1, Charset.forName("ISO-8859-1")).stream()
+//                    .collect(Collectors.joining());
+
+       return result;
     }
 }

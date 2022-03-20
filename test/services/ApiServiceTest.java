@@ -3,6 +3,7 @@ package services;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Project;
+import models.Owner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -58,6 +60,10 @@ public class ApiServiceTest {
 
                     dsl.GET("/testGetSingleProject/123")
                             .routingTo(request -> ok().sendResource("singleProject.json"));
+                    dsl.GET("/testGetPersonalInformation/123")
+                            .routingTo(request -> ok().sendResource("getOwner.json"));
+                    dsl.GET("/testGetOwenrProjects/123&limit=10&job_details=true")
+                            .routingTo(request -> ok().sendResource("getOwnerProjects.json"));
 
                     return dsl.build();
                 });
@@ -145,5 +151,20 @@ public class ApiServiceTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Mocks a request for employer data to the API
+     *
+     * @author Haoyue Zhang
+     */
+    @Test
+    public void testgetUserInfo() throws Exception {
+        apiService.userQuery = "/testGetPersonalInformation/";
+        apiService.userProjectQuery ="/testGetOwenrProjects/";
+        Owner employerInfo = apiService.getUserInfo("123").toCompletableFuture().get();
+        assertThat(employerInfo.projects.get(0).getOwnerId(), equalTo("61317541"));
+
+
     }
 }

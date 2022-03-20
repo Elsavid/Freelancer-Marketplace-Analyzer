@@ -21,6 +21,9 @@ public class OwnerTest {
     public String jsonString_projectLists;
     public String unCorrectJsonString;
 
+    /**
+     * Instantiates tests fixture before each test (each class attributes)
+     */
     @Before
     public void InitialOwner(){
         Id = "56575218";
@@ -72,7 +75,9 @@ public class OwnerTest {
         projects.add(projectTemp2);
     }
 
-
+    /**
+     * Tests the parseUserInformation
+     */
     @Test
     public void parseUserInformation() {
         Owner testOnwer = new Owner();
@@ -86,6 +91,9 @@ public class OwnerTest {
         assertTrue(userInfnormation.equals(testOnwer.userInfnormation));
     }
 
+    /**
+     * Tests the parseProjectLists
+     */
     @Test
     public void parseProjectLists() {
         Owner testOnwer = new Owner();
@@ -116,6 +124,10 @@ public class OwnerTest {
             }
         }
     }
+
+    /**
+     * Tests the parseRecursively
+     */
     @Test
     public void parseRecursively(){
         ObjectMapper mapper = new ObjectMapper();
@@ -130,6 +142,10 @@ public class OwnerTest {
         assertTrue(userInfnormation.equals(ownerTest.userInfnormation));
 
     }
+
+    /**
+     * Tests the Parameterized constructor of Onwer class
+     */
     @Test
     public void OwnerCorrectParseTest(){
         Owner testOnwer = new Owner(jsonString_userInfo,jsonString_projectLists);

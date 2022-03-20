@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -119,7 +118,8 @@ public class ApiServiceTest {
         try {
             List<Project> projectList = apiService.getProjects("", 0).toCompletableFuture().get();
             // Checks that all Projects from the json file were parsed and sent back
-            Set<String> expectedID = Set.of("33206644", "33206636", "33206716", "33206633", "33206628", "33206712", "33206692", "33206709", "33206706", "33206705");
+            Set<String> expectedID = Set.of("33206644", "33206636", "33206716", "33206633", "33206628", "33206712",
+                    "33206692", "33206709", "33206706", "33206705");
             assertEquals(expectedID, projectList.stream().map(Project::getId).collect(Collectors.toSet()));
         } catch (Exception e) {
         }
@@ -132,8 +132,10 @@ public class ApiServiceTest {
      */
     @Test
     public void testGetSingleProject() {
-        // All IDs used in the getSingleProject method are found after a general getProjects request
-        // so a "wrong" ID can never be used in our situation, and thus we don't test this case
+        // All IDs used in the getSingleProject method are found after a general
+        // getProjects request
+        // so a "wrong" ID can never be used in our situation, and thus we don't test
+        // this case
         apiService.projectQuery = "/testGetSingleProject/";
         try {
             // What we get and what we expect
@@ -145,8 +147,7 @@ public class ApiServiceTest {
                     "Fullstack android developer  ",
                     "hourly",
                     new ArrayList<>(),
-                    "Need a fullstack developer with experience in\n Android Mobile Platform Development |  SQLLite | JAVA"
-            );
+                    "Need a fullstack developer with experience in\n Android Mobile Platform Development |  SQLLite | JAVA");
             assertTrue(p.equals(expected));
         } catch (Exception e) {
             e.printStackTrace();
@@ -161,10 +162,8 @@ public class ApiServiceTest {
     @Test
     public void testgetUserInfo() throws Exception {
         apiService.userQuery = "/testGetPersonalInformation/";
-        apiService.userProjectQuery ="/testGetOwenrProjects/";
+        apiService.userProjectQuery = "/testGetOwenrProjects/";
         Owner employerInfo = apiService.getUserInfo("123").toCompletableFuture().get();
         assertThat(employerInfo.projects.get(0).getOwnerId(), equalTo("61317541"));
-
-
     }
 }

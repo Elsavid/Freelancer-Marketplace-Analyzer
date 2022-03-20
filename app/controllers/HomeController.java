@@ -73,10 +73,7 @@ public class HomeController extends Controller {
     public CompletionStage<Result> skill(String skill) {
         CompletionStage<List<Project>> projectList = apiService.getSkill(skill);
         return projectList.toCompletableFuture().thenApplyAsync(projects -> {
-            if (!projects.isEmpty()) {
-                return ok(views.html.skill.render(projects));
-            }
-            return ok("not found");
+            return ok(views.html.skill.render(projects));
         });
     }
 
@@ -121,12 +118,12 @@ public class HomeController extends Controller {
     /**
      * Renders the employer page of the application
      *
-     * @param owner_id The employer id to be linked
+     * @param ownerId The employer id to be linked
      * @return Play response and render of the employer page
      *
      * @author Haoyue Zhang
      */
-    public CompletionStage<Result> employer(String owner_id) {
-        return apiService.getUserInfo(owner_id).thenApplyAsync(owner -> ok(views.html.employer.render(owner, owner.projects)));
+    public CompletionStage<Result> employer(String ownerId) {
+        return apiService.getUserInfo(ownerId).thenApplyAsync(owner -> ok(views.html.employer.render(owner, owner.projects)));
     }
 }

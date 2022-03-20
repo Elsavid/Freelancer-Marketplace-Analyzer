@@ -21,6 +21,8 @@ import services.ReadabilityService;
 import static models.ProjectToJsonParser.convertToJson;
 
 /**
+ * The search actor is used to display 10 results for provided query keywords
+ * 
  * @author Whole group
  */
 public class SearchActor extends AbstractActor {
@@ -31,23 +33,23 @@ public class SearchActor extends AbstractActor {
     ReadabilityService readabilityService;
 
     /**
-     * Props factory method
+     * Props creates the Actor and return Actor protocal
      *
-     * @param out
-     * @param apiService
-     * @param readabilityService
-     * @return
+     * @param out ActorRef of Actor
+     * @param apiService ApiServiceInterface
+     * @param readabilityService ReadabilityService
+     * @return Props
      */
     public static Props props(ActorRef out, ApiServiceInterface apiService, ReadabilityService readabilityService) {
         return Props.create(SearchActor.class, out, apiService, readabilityService);
     }
 
     /**
-     * Parameterized constructor
+     * SearchActor constructor
      *
-     * @param out
-     * @param apiService
-     * @param readabilityService
+     * @param out ActorRef of Actor
+     * @param apiService ApiServiceInterface
+     * @param readabilityService ReadabilityService
      */
     @Inject
     public SearchActor(ActorRef out, ApiServiceInterface apiService, ReadabilityService readabilityService) {
@@ -81,6 +83,11 @@ public class SearchActor extends AbstractActor {
                 .thenAcceptAsync(response -> out.tell(response, self()));
     }
 
+    /**
+	 * Method called when Actor receives message
+	 * 
+	 * @return Receive
+	 */
     @Override
     public Receive createReceive() {
         return receiveBuilder()

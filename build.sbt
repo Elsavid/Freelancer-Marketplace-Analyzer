@@ -32,7 +32,7 @@ lazy val javadocSettings = inConfig(Javadoc)(Defaults.configSettings) ++ Seq(
   Javadoc / sources :=
     (target.value / "java" ** "*.java").get ++
     (Compile / sources).value.filter(_.getName.endsWith(".java")),
-  Javadoc / javacOptions := Seq(),
+  Javadoc / javacOptions := Seq("-private"),
   Javadoc / packageDoc / artifactName := ((sv, mod, art) =>
     "" + mod.name + "_" + sv.binary + "-" + mod.revision + "-javadoc.jar")
 )

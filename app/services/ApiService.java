@@ -71,7 +71,8 @@ public class ApiService implements ApiServiceInterface {
     public CompletionStage<Project> getSingleProject(long id) {
         CompletableFuture<Object> resp = sendRequest(projectQuery + id);
         // Parse to single Project object
-        return resp.thenApply(jsonResp -> ApiServiceInterface.createProjectFromJsonNode(((JsonNode) jsonResp).get("result")));
+        return resp.thenApply(
+                jsonResp -> ApiServiceInterface.createProjectFromJsonNode(((JsonNode) jsonResp).get("result")));
     }
 
     /**
@@ -84,7 +85,7 @@ public class ApiService implements ApiServiceInterface {
      * @author Haoyue Zhang
      */
     public CompletionStage<Owner> getUserInfo(String owner_id) {
-        String url1 = userQuery+ owner_id;
+        String url1 = userQuery + owner_id;
         return ws.url(url1).get()
                 .thenCombine(ws.url(userProjectQuery + owner_id + "&limit=10&job_details=true").get(),
                         (r1, r2) -> new Owner(r1.getBody(), r2.getBody()));

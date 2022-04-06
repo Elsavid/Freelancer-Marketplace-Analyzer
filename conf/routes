@@ -8,11 +8,15 @@ GET        /                             controllers.HomeController.index(reques
 GET        /searchSocket                 controllers.HomeController.searchSocket
 GET        /readability/:input           controllers.HomeController.readability(input: String)
 GET        /skill/:skill                 controllers.HomeController.skill(skill: String)
+
+# Routes used for the statistics feature
 GET        /searchstats/:keywords        controllers.HomeController.searchStats(keywords: String)
 GET        /stats/:id                    controllers.HomeController.stats(id: Long)
 
+GET        /statsSocket                  controllers.HomeController.statsSocket
+
 #employer profile @author:Haoyue
-GET     /employer/:owner_id                   controllers.HomeController.employer(owner_id:String)
+GET        /employer/:owner_id           controllers.HomeController.employer(owner_id:String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file                 controllers.Assets.versioned(path="/public", file: Asset)

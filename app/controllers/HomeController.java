@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import actors.SearchActor;
+import actors.StatsActor;
 import actors.SkillActor;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
@@ -53,7 +54,7 @@ public class HomeController extends Controller {
     }
 
     /**
-     * Creates the websocket connections fo the keywords search request
+     * Creates the websocket connections for the keywords search request
      * 
      * @return websocket connection
      * 
@@ -98,16 +99,14 @@ public class HomeController extends Controller {
      * Renders the global words statistics page of the application (for a given
      * query)
      *
-     * @param encodedKeywords The keywords used for the query being analyzed
+     * @param encodedKeywords The keywords used for the query being analyzed (URI encoded)
      * @return Play response and render of the global words statistics page
      *
      * @author Vincent Marechal
      */
-    public CompletionStage<Result> searchStats(String encodedKeywords) {
-        // Decode keywords
+    public Result searchStats(String encodedKeywords) {
         String keywords = URLDecoder.decode(encodedKeywords, StandardCharsets.UTF_8);
-        return apiService.getProjects(keywords, 250)
-                .thenApplyAsync(projects -> ok(views.html.globalwordstats.render(keywords, projects)));
+        return ok(views.html.globalwordstats.render(keywords));
     }
 
     /**
@@ -118,9 +117,19 @@ public class HomeController extends Controller {
      *
      * @author Vincent Marechal
      */
-    public CompletionStage<Result> stats(long id) {
-        return apiService.getSingleProject(id)
-                .thenApplyAsync(project -> ok(views.html.projectwordstats.render(project)));
+    public Result stats(long projectId) {
+        return ok(views.html.projectwordstats.render(projectId));
+    }
+
+    /**
+     * Creates the websocket connections for the words statistics request
+     *
+     * @return websocket connection
+     *
+     * @author Vincent Marechal
+     */
+    public WebSocket statsSocket() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> StatsActor.props(out, apiService), actorSystem, materializer));
     }
 
     /**

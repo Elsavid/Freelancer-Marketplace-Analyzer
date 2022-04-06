@@ -1,10 +1,13 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import play.libs.Json;
 
-import java.util.List;
+import play.libs.Json;
 
 /**
  * Utility methods to convert Project objects to Json data
@@ -23,9 +26,22 @@ public class ProjectToJsonParser {
 
         ObjectNode response = Json.newObject();
         ObjectNode projects = Json.newObject();
-        projectList.stream().forEach(projectObject -> projects.set(String.valueOf(projectObject.getId()), projectToJson(projectObject)));
+        projectList.stream().forEach(
+                projectObject -> projects.set(String.valueOf(projectObject.getId()), projectToJson(projectObject)));
         response.set("projects", projects);
         return response;
+    }
+
+    public static List<Project> filterProject(List<Project> projectList, Set<Integer> seen) {
+        List<Project> filtered = new ArrayList<>();
+        for (Project p : projectList) {
+            if (!seen.contains(p.getId())) {
+                filtered.add(p);
+                seen.add(p.getId());
+            }
+        }
+
+        return filtered;
     }
 
     /**

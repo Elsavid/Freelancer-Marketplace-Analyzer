@@ -1,8 +1,4 @@
-@import WordStatsProcessor.processProjectWordStats;
-@import WordStatsProcessor.mapToHtmlTable;
-@import play.twirl.api.HtmlFormat.raw;
-
-@(project: Project)
+@(projectId: Long)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,9 +15,32 @@
     <body>
         <section>
             <div class="centeredBlock">
-                <h1>Words statistics for project ID @project.getId()</h1>
-                @raw(mapToHtmlTable(processProjectWordStats(project).getWordStats()))
+                <h1>Words statistics for project ID @projectId</h1>
+                <div id="result">
+                    <!-- Result placeholder -->
+                </div>
             </div>
         </section>
     </body>
+
+    <script>
+
+        // Get the project id and create/open the web socket
+        let projectId = window.location.pathname.split("/").pop();
+        const statsSocket = new WebSocket('ws://localhost:9000/statsSocket');
+
+        // Send the project id through the web socket for the StatsActor to process it
+        statsSocket.addEventListener('open', function(event) {
+            statsSocket.send(JSON.stringify({
+                global: 'false',
+                projectId: projectId
+            }));
+        });
+
+        // Parse the response from the web socket and display it
+        statsSocket.addEventListener('message', function(event) {
+            $('#result').append(JSON.parse(event.data).result);
+        });
+
+    </script>
 </html>

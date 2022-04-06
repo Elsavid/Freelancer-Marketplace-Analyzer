@@ -1,8 +1,4 @@
-@import WordStatsProcessor.getGlobalWordStats;
-@import WordStatsProcessor.mapToHtmlTable;
-@import play.twirl.api.HtmlFormat.raw;
-
-@(keywords: String, projects: List[Project])
+@(keywords: String)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,8 +16,31 @@
         <section>
             <div class="centeredBlock">
                 <h1>Global words statistics for the search result using the keywords "@keywords"</h1>
-                    @raw(mapToHtmlTable(getGlobalWordStats(projects)))
+                <div id="result">
+                        <!-- Result placeholder -->
+                </div>
             </div>
         </section>
     </body>
+
+    <script>
+
+        // Get the keywords and create/open the web socket
+        let keywords = window.location.pathname.split("/").pop();
+        const statsSocket = new WebSocket('ws://localhost:9000/statsSocket');
+
+        // Send the keywords through the web socket for the StatsActor to process them
+        statsSocket.addEventListener('open', function (event) {
+            statsSocket.send(JSON.stringify({
+                global: 'true',
+                keywords: keywords
+            }));
+        });
+
+        // Parse the response from the web socket and display it
+        statsSocket.addEventListener('message', function (event) {
+            $('#result').append(JSON.parse(event.data).result);
+        });
+
+    </script>
 </html>

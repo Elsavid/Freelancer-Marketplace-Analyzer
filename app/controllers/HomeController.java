@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import actors.SearchActor;
+import actors.SkillActor;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
 import models.Project;
@@ -59,7 +60,12 @@ public class HomeController extends Controller {
      * @author Yan Ren
      */
     public WebSocket searchSocket() {
-        return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> SearchActor.props(out, apiService, readabilityService), actorSystem, materializer));
+        return WebSocket.Json.accept(request -> ActorFlow
+                .actorRef(out -> SearchActor.props(out, apiService, readabilityService), actorSystem, materializer));
+    }
+
+    public Result skill(String skill) {
+        return ok(views.html.skill.render(skill));
     }
 
     /**
@@ -70,11 +76,9 @@ public class HomeController extends Controller {
      * 
      * @author Yan Ren
      */
-    public CompletionStage<Result> skill(String skill) {
-        CompletionStage<List<Project>> projectList = apiService.getSkill(skill);
-        return projectList.toCompletableFuture().thenApplyAsync(projects -> {
-            return ok(views.html.skill.render(projects));
-        });
+    public WebSocket skillSocket() {
+        return WebSocket.Json.accept(request -> ActorFlow
+                .actorRef(out -> SkillActor.props(out, apiService), actorSystem, materializer));
     }
 
     /**
@@ -86,11 +90,13 @@ public class HomeController extends Controller {
      * @author Wenshu Li
      */
     public CompletionStage<Result> readability(String input) {
-        return CompletableFuture.supplyAsync(() -> ok(views.html.readability.render(readabilityService.getReadability(input))));
+        return CompletableFuture
+                .supplyAsync(() -> ok(views.html.readability.render(readabilityService.getReadability(input))));
     }
 
     /**
-     * Renders the global words statistics page of the application (for a given query)
+     * Renders the global words statistics page of the application (for a given
+     * query)
      *
      * @param encodedKeywords The keywords used for the query being analyzed
      * @return Play response and render of the global words statistics page
@@ -100,7 +106,8 @@ public class HomeController extends Controller {
     public CompletionStage<Result> searchStats(String encodedKeywords) {
         // Decode keywords
         String keywords = URLDecoder.decode(encodedKeywords, StandardCharsets.UTF_8);
-        return apiService.getProjects(keywords, 250).thenApplyAsync(projects -> ok(views.html.globalwordstats.render(keywords, projects)));
+        return apiService.getProjects(keywords, 250)
+                .thenApplyAsync(projects -> ok(views.html.globalwordstats.render(keywords, projects)));
     }
 
     /**
@@ -112,7 +119,8 @@ public class HomeController extends Controller {
      * @author Vincent Marechal
      */
     public CompletionStage<Result> stats(long id) {
-        return apiService.getSingleProject(id).thenApplyAsync(project -> ok(views.html.projectwordstats.render(project)));
+        return apiService.getSingleProject(id)
+                .thenApplyAsync(project -> ok(views.html.projectwordstats.render(project)));
     }
 
     /**
@@ -124,6 +132,7 @@ public class HomeController extends Controller {
      * @author Haoyue Zhang
      */
     public CompletionStage<Result> employer(String ownerId) {
-        return apiService.getUserInfo(ownerId).thenApplyAsync(owner -> ok(views.html.employer.render(owner, owner.projects)));
+        return apiService.getUserInfo(ownerId)
+                .thenApplyAsync(owner -> ok(views.html.employer.render(owner, owner.projects)));
     }
 }

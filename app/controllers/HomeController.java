@@ -65,16 +65,23 @@ public class HomeController extends Controller {
                 .actorRef(out -> SearchActor.props(out, apiService, readabilityService), actorSystem, materializer));
     }
 
+    /**
+     * Renders the skill page of the application
+     *
+     * @param skill An skill id used for request query
+     * @return Render of the skill page
+     *
+     * @author Yan Ren
+     */
     public Result skill(String skill) {
         return ok(views.html.skill.render(skill));
     }
 
     /**
-     * Renders the skill page of the application
-     * 
-     * @param skill An skill id used for request query
-     * @return Render of the skill page
-     * 
+     * Creates the websocket connections for the skills search feature
+     *
+     * @return websocket connection
+     *
      * @author Yan Ren
      */
     public WebSocket skillSocket() {
@@ -112,7 +119,7 @@ public class HomeController extends Controller {
     /**
      * Renders the words statistics page of the application (for a given project)
      * 
-     * @param id The ID of the project to analyze
+     * @param projectId The ID of the project to analyze
      * @return Play response and render of the project words statistics page
      *
      * @author Vincent Marechal

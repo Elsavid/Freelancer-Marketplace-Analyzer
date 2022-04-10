@@ -44,9 +44,14 @@ public class ApiService implements ApiServiceInterface {
      * @return A CompletionStage object containing a Project objects list
      * @author Whole group
      */
-    public CompletionStage<List<Project>> getProjects(String query, int limit) {
+    public CompletionStage<List<Project>> getProjects(String query, int limit, boolean isUpdate) {
         String finalUrl = projectQuery + "active?limit=" + limit + "&job_details=true&query=\"" + query + "\"";
-        return cache.get(finalUrl, str -> ApiServiceInterface.processAPIResponse(sendRequest(finalUrl)));
+        // First case: we want to fetch new projects (to update the front-page) so we first force update the cache
+        if (isUpdate) {
+            cache.put(finalUrl, ApiServiceInterface.processAPIResponse(sendRequest(finalUrl)));
+        }
+        // Second case, we just want to fetch projects already processed before
+        return cache.get(finalUrl, str -> ApiServiceInterface.processAPIResponse(sendRequest(str)));
     }
 
     /**

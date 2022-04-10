@@ -29,7 +29,7 @@ public class ApiServiceMock implements ApiServiceInterface {
      * @return A CompletionStage object containing a Project objects list
      * @author Whole group
      */
-    public CompletionStage<List<Project>> getProjects(String query, int limit) {
+    public CompletionStage<List<Project>> getProjects(String query, int limit, boolean isUpdate) {
 
         CompletableFuture<List<Project>> result = new CompletableFuture<>();
         try {

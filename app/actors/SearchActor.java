@@ -1,11 +1,13 @@
 package actors;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
+import java.util.Map.Entry;
+
+import play.libs.Json;
+import scala.Option;
 import scala.concurrent.duration.Duration;
 
 import javax.inject.Inject;
@@ -23,11 +25,10 @@ import services.ApiServiceInterface;
 import services.ReadabilityService;
 
 import static models.ProjectToJsonParser.convertToJson;
-import static models.ProjectToJsonParser.filterProject;
 
 /**
  * The search actor is used to display 10 results for provided query keywords
- * 
+ *
  * @author Whole group
  */
 public class SearchActor extends AbstractActorWithTimers {
@@ -36,8 +37,8 @@ public class SearchActor extends AbstractActorWithTimers {
     private final ActorRef out;
     ApiServiceInterface apiService;
     ReadabilityService readabilityService;
-    private JsonNode requestCache;
-    private Set<Integer> seen = new HashSet<>();
+    private Map<String, List<Project>> projectCache;
+
 
     public static final class Tick {
     }
@@ -45,7 +46,6 @@ public class SearchActor extends AbstractActorWithTimers {
     /**
      * Method Call before Actor is created and it starts sending Tick message
      * every 10 seconds
-     * 
      */
     @Override
     public void preStart() {
@@ -77,6 +77,15 @@ public class SearchActor extends AbstractActorWithTimers {
         this.out = out;
         this.apiService = apiService;
         this.readabilityService = readabilityService;
+
+        // Cache Map with a size of 10 queries, removes the eldest entry if size > 10
+        this.projectCache = new LinkedHashMap<>() {
+            @Override
+            protected boolean removeEldestEntry(Entry<String, List<Project>> eldest) {
+                return size() > 10;
+            }
+        };
+
         logger.info("New Search Actor for WebSocket {}", out);
     }
 
@@ -89,33 +98,81 @@ public class SearchActor extends AbstractActorWithTimers {
      * @author Whole group
      */
     private void onSendMessage(JsonNode request) {
-        this.requestCache = request;
 
-        CompletionStage<List<Project>> projectsPromise = apiService.getProjects(request.get("keywords").asText(), 250);
+        String keywords = request.get("keywords").asText();
+
+        CompletionStage<List<Project>> projectsPromise = apiService.getProjects(keywords, 250, true);
         projectsPromise.thenApply(projectList -> {
             // Only need to display 10 projects
-            List<Project> limitedProjectList = projectList.stream().limit(10).collect(Collectors.toList());
-            List<Project> filteredProjectList = filterProject(limitedProjectList, seen);
-            ObjectNode response = convertToJson(filteredProjectList);
-            response.put("keywords", request.get("keywords").asText());
-            if (!filteredProjectList.isEmpty()) {
-                AverageReadability averageReadability = readabilityService.getAvgReadability(filteredProjectList);
-                response.put("flesch_index", averageReadability.getFleschIndex());
-                response.put("FKGL", averageReadability.getFKGL());
-            }
-            return response;
+            List<Project> filteredProjectList = limitAndFilter(keywords, projectList);
+
+            // Add the new projects to the cache
+            projectCache.merge(keywords,
+                    filteredProjectList,
+                    (l1, l2) -> {
+                        l1.addAll(l2);
+                        return l1;
+                    });
+
+            return convertCacheToJson();
+
         }).thenAcceptAsync(response -> out.tell(response, self()));
     }
 
+
+    private ObjectNode convertCacheToJson() {
+        ObjectNode response = Json.newObject();
+        for (Entry entry: projectCache.entrySet()) {
+
+            List<Project> projectList = (List<Project>) entry.getValue();
+            ObjectNode projectsNode = convertToJson(projectList);
+            projectsNode.put("keywords", (String) entry.getKey());
+
+            if (!projectList.isEmpty()) {
+                AverageReadability averageReadability = readabilityService.getAvgReadability(projectList);
+                projectsNode.put("flesch_index", averageReadability.getFleschIndex());
+                projectsNode.put("FKGL", averageReadability.getFKGL());
+            }
+            response.set((String) entry.getKey(), projectsNode);
+        }
+        return response;
+    }
+
+
     private void onUpdate(Tick t) {
-        if (this.requestCache != null) {
-            this.onSendMessage(this.requestCache);
+        // Wait for a first search to be done
+        if (!projectCache.isEmpty()) {
+            // Refresh the results for all requests in the cache
+            for (String keywords: projectCache.keySet()) {
+                ObjectNode request = Json.newObject().put("keywords", keywords);
+                onSendMessage(request);
+            }
         }
     }
 
     /**
+     * Takes a list of Project objects, filters out the ones already processed previously
+     * and limits the final list to 10 elements
+     *
+     * @param projectList The list of projects to filter
+     * @return A filtered list of Project objects
+     */
+    private List<Project> limitAndFilter(String keywords, List<Project> projectList) {
+        return projectList.stream()
+                .filter(p -> {
+                    boolean isDuplicate = false;
+                    if (projectCache.keySet().contains(keywords)) {
+                        isDuplicate = projectCache.get(keywords).stream().map(Project::getId).anyMatch(id -> id.equals(p.getId()));
+                    }
+                    return !isDuplicate;
+                })
+                .limit(10)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Method called when Actor receives message
-     * 
+     *
      * @return Receive
      */
     @Override

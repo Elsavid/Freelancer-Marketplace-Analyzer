@@ -116,7 +116,7 @@ public class ApiServiceTest {
     public void testGetProjects() {
         apiService.projectQuery = "/testGetProjects";
         try {
-            List<Project> projectList = apiService.getProjects("", 0).toCompletableFuture().get();
+            List<Project> projectList = apiService.getProjects("", 0, true).toCompletableFuture().get();
             // Checks that all Projects from the json file were parsed and sent back
             Set<String> expectedID = Set.of("33206644", "33206636", "33206716", "33206633", "33206628", "33206712",
                     "33206692", "33206709", "33206706", "33206705");

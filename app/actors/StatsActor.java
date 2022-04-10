@@ -46,11 +46,12 @@ public class StatsActor extends AbstractActor {
                 .build();
     }
 
-
     private void onReceiveJson(JsonNode request) {
 
-        // Check that the received request is correct by checking the "global" attribute in the json
-        JsonNode globalStatus = Optional.ofNullable(request.get("global")).orElse(Json.newObject().put("global", "absent").get("global"));
+        // Check that the received request is correct by checking the "global" attribute
+        // in the json
+        JsonNode globalStatus = Optional.ofNullable(request.get("global"))
+                .orElse(Json.newObject().put("global", "absent").get("global"));
         String isGlobal = globalStatus.asText();
 
         if (isGlobal.equals("true")) {
@@ -70,14 +71,15 @@ public class StatsActor extends AbstractActor {
     }
 
     private void getGlobalStats(String keywords) {
-        apiService.getProjects(keywords, 250)
+        apiService.getProjects(keywords, 250, false)
                 .thenApply(WordStatsProcessor::getGlobalWordStats)
                 .thenAccept(this::convertAndSend);
     }
 
     private void convertAndSend(Map<String, Long> wordStats) {
         String htmlTable = WordStatsProcessor.mapToHtmlTable(wordStats);
-        ObjectNode jsonResponse = Json.newObject().put("result", htmlTable);;
+        ObjectNode jsonResponse = Json.newObject().put("result", htmlTable);
+        ;
         out.tell(jsonResponse, self());
     }
 }

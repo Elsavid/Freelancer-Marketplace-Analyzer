@@ -29,7 +29,7 @@ public interface ApiServiceInterface {
      * @return A CompletionStage object containing a Project objects list
      * @author Whole group
      */
-    CompletionStage<List<Project>> getProjects(String query, int limit);
+    CompletionStage<List<Project>> getProjects(String query, int limit, boolean isUpdate);
 
     /**
      * Sends an HTTP request to the API to get a list of projects based on skills

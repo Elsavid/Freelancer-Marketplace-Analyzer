@@ -194,19 +194,20 @@ public class HomeControllerTest extends WithApplication {
      *
      * @author Wenshu Li
      */
+    //TODO..
+    //@Test
 
-    @Test
-    public final void testReadability() {
-        CompletionStage<Result> csResult = controller.readability("How are your bro? I'm fine thank you, and you?");
-        csResult.whenComplete((r, e) -> {
-            String parsedResult = Helpers.contentAsString(r);
-            assertThat("Optional[text/html]", is(r.contentType().toString()));
-            assertThat(parsedResult, containsString("Readability"));
-        }).exceptionally(e -> {
-            System.out.println(e);
-            return null;
-        });
-    }
+//    public final void testReadability() {
+//        CompletionStage<Result> csResult = controller.readability("How are your bro? I'm fine thank you, and you?");
+//        csResult.whenComplete((r, e) -> {
+//            String parsedResult = Helpers.contentAsString(r);
+//            assertThat("Optional[text/html]", is(r.contentType().toString()));
+//            assertThat(parsedResult, containsString("Readability"));
+//        }).exceptionally(e -> {
+//            System.out.println(e);
+//            return null;
+//        });
+//    }
 
     /**
      * Tests the employer controller

@@ -9,6 +9,7 @@ import java.util.concurrent.CompletionStage;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import actors.ReadabilityActor;
 import actors.SearchActor;
 import actors.StatsActor;
 import actors.SkillActor;
@@ -92,14 +93,22 @@ public class HomeController extends Controller {
     /**
      * Renders the readability page of application
      * 
-     * @param input The pre_description field text
+     * @param projectId The ID of the project to analyze
      * @return Render of the readability page
      *
      * @author Wenshu Li
      */
-    public CompletionStage<Result> readability(String input) {
-        return CompletableFuture
-                .supplyAsync(() -> ok(views.html.readability.render(readabilityService.getReadability(input))));
+    public Result readability(long projectId) {return ok(views.html.readability.render(projectId));}
+
+    /**
+     * Creates the websocket connections for the readability request
+     *
+     * @return WebsocketConnection
+     *
+     * @author Wenshu Li
+     */
+    public WebSocket readabilitySocket() {
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> ReadabilityActor.props(out, apiService, readabilityService), actorSystem, materializer));
     }
 
     /**

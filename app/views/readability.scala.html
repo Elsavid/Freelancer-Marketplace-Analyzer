@@ -1,14 +1,33 @@
-@(readability: Readability)
+@(projectId: Long)
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
         <title>Readability</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
+        <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/prism.css")'>
+        <link rel="shortcut icon" type="image/png" href='@routes.Assets.versioned("images/favicon.png")'>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src='@routes.Assets.versioned("javascripts/prism.js")' type="text/javascript"></script>
     </head>
     <body>
-        <div>
-            <li>Flesh Reading Ease Index: @readability.getFleschIndex</li>
-            <li>Education level: @readability.getEducationLevel</li>
+        <div id="result">
+
         </div>
     </body>
+    <script>
+            let projectId = window.location.pathname.split("/").pop();
+            const readabilitySocket = new WebSocket('ws://localhost:9000/readabilitySocket');
+
+            readabilitySocket.addEventListener('open', function(event) {
+                readabilitySocket.send(JSON.stringify({
+                    projectId: projectId
+                }));
+            });
+
+
+            readabilitySocket.addEventListener('message', function(event) {
+                $('#result').append(JSON.parse(event.data).result);
+            });
+    </script>
 </html>

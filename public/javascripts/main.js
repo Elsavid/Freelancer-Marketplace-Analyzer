@@ -27,7 +27,7 @@ function displayResult(data) {
 
             row.append($('<td/>').append(skillsContainer));
             row.append($('<td/>').append($('<a href="/stats/' + id + '">View stats</a>')));
-            row.append($('<td/>').append($('<a href="/readability/' + encodeURIComponent(project["preview_description"]) + '" target="_blank">' + 'Readability' + '</a>')));
+            row.append($('<td/>').append($('<a href="/readability/' + id + '" target="_blank">' + 'Readability' + '</a>')));
 
             resultTable.append(row);
         }

@@ -40,11 +40,14 @@ public class SearchActor extends AbstractActorWithTimers {
     private Map<String, List<Project>> projectCache;
 
 
+    /**
+     * Tick signal used for updates
+     */
     public static final class Tick {
     }
 
     /**
-     * Method Call before Actor is created and it starts sending Tick message
+     * Method called before Actor is created and starts sending Tick message
      * every 10 seconds
      */
     @Override
@@ -54,7 +57,7 @@ public class SearchActor extends AbstractActorWithTimers {
     }
 
     /**
-     * Props creates the Actor and return Actor protocal
+     * Props creates the Actor and return Actor protocol
      *
      * @param out                ActorRef of Actor
      * @param apiService         ApiServiceInterface
@@ -120,6 +123,11 @@ public class SearchActor extends AbstractActorWithTimers {
     }
 
 
+    /**
+     * Converts the Actor's cache to a json object for easy transfer to the front-end
+     *
+     * @return A json object version of the Actor's cache
+     */
     private ObjectNode convertCacheToJson() {
         ObjectNode response = Json.newObject();
         for (Entry entry: projectCache.entrySet()) {
@@ -138,7 +146,11 @@ public class SearchActor extends AbstractActorWithTimers {
         return response;
     }
 
-
+    /**
+     * Starts the update process of the current search queries
+     *
+     * @param t A Tick message sent every 10 seconds
+     */
     private void onUpdate(Tick t) {
         // Wait for a first search to be done
         if (!projectCache.isEmpty()) {

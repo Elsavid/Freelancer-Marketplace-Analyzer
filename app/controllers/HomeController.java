@@ -37,6 +37,13 @@ public class HomeController extends Controller {
     @Inject
     WSClient ws;
 
+    /**
+     * The HomeController constructor
+     * @param actorSystem The default ActorSystem (from Play)
+     * @param materializer Materializer for AkkaStreams
+     *
+     * @author Whole group
+     */
     @Inject
     public HomeController(ActorSystem actorSystem, Materializer materializer) {
         this.actorSystem = actorSystem;

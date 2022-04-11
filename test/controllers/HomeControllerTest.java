@@ -127,6 +127,9 @@ public class HomeControllerTest extends WithApplication {
         // Title and table are displayed
         assertTrue(parsedResult
                 .contains("<h1>Global words statistics for the search result using the keywords \"PHP\"</h1>"));
+
+        // Javascript in views isn't executed during tests so we can't test the data inside the template here
+        // but this is done through the tests of the StatsActor iteself
         // assertTrue(parsedResult.contains("Number of appearances"));
         // // Statistics are displayed
         // assertTrue(parsedResult.contains("<tr><td>centers</td><td>2</td></tr>"));
@@ -148,6 +151,9 @@ public class HomeControllerTest extends WithApplication {
 
         // Title and table are displayed
         assertTrue(parsedResult.contains("<h1>Words statistics for project ID 33239791</h1>"));
+
+        // Javascript in views isn't executed in tests so we can't test the data inside the template here
+        // but this is done through the tests of the StatsActor iteself
         // assertTrue(parsedResult.contains("Number of appearances"));
         // // Statistics are displayed
         // assertTrue(parsedResult.contains("<tr><td>with</td><td>1</td></tr>"));
@@ -205,11 +211,15 @@ public class HomeControllerTest extends WithApplication {
     @Test
     public final void testWebSockets() {
         WebSocket statsSocket = controller.statsSocket();
-        WebSocket searchStats = controller.searchSocket();
+        WebSocket searchSocket = controller.searchSocket();
+        WebSocket readabilitySocket = controller.readabilitySocket();
 
         assertTrue("play.mvc.WebSocket$1".equals(statsSocket.getClass().getName()));
-        assertTrue("play.mvc.WebSocket$1".equals(searchStats.getClass().getName()));
+        assertTrue("play.mvc.WebSocket$1".equals(searchSocket.getClass().getName()));
+        assertTrue("play.mvc.WebSocket$1".equals(readabilitySocket.getClass().getName()));
 
-        assertNotEquals(statsSocket, searchStats);
+        assertNotEquals(statsSocket, searchSocket);
+        assertNotEquals(statsSocket, readabilitySocket);
+        assertNotEquals(searchSocket, readabilitySocket);
     }
 }

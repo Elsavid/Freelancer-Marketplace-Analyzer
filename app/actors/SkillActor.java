@@ -21,7 +21,7 @@ import static models.ProjectToJsonParser.convertToJson;
 /**
  * The search actor is used to display 10 results for provided query keywords
  * 
- * @author Whole group
+ * @author Yan Ren
  */
 public class SkillActor extends AbstractActor {
 
@@ -30,7 +30,7 @@ public class SkillActor extends AbstractActor {
     ApiServiceInterface apiService;
 
     /**
-     * Props creates the Actor and return Actor protocal
+     * Props creates the Actor and return Actor protocol
      *
      * @param out        ActorRef of Actor
      * @param apiService ApiServiceInterface

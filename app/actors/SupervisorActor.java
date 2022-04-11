@@ -11,6 +11,11 @@ import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
+/**
+ * Main Supervisor actor of the application
+ *
+ * @author Yan Ren
+ */
 public class SupervisorActor extends AbstractActor {
     private LoggingAdapter logger = Logging.getLogger(getContext().getSystem(), this);
     private Set<ActorRef> userActors;
@@ -67,11 +72,20 @@ public class SupervisorActor extends AbstractActor {
                 .build();
     }
 
-    private Object deregister(ActorRef sender) {
+    /**
+     * Removes an Actor from the list of Actors supervised by this Actor
+     * @param sender The ActorRef of the Actor to remove
+     * @return True if the Actor was removed
+     */
+    private boolean deregister(ActorRef sender) {
         logger.info("Server supervisor actor unregister: {}", sender);
         return userActors.remove(sender);
     }
 
+    /**
+     * Adds an Actor to the list of Actors supervised by this Actor
+     * @param actorRef The ActorRef of the Actor to add
+     */
     private void register(ActorRef actorRef) {
         logger.info("Server supervisor actor register: {}", actorRef);
         userActors.add(actorRef);

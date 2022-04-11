@@ -31,6 +31,12 @@ public class ApiService implements ApiServiceInterface {
 
     WSClient ws;
 
+    /**
+     * ApiService constructor
+     *
+     * @param ws The WS client used for this API calls
+     * @author Whole group
+     */
     @Inject
     public ApiService(WSClient ws) {
         this.ws = ws;

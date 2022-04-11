@@ -26,7 +26,7 @@ function generateProjectsTable(projectsJson) {
         resultTable.append($('</table>'));
 
         // Create the new section that will display the search results
-        newSection.append($('<h3>Search results for keywords <a href="/searchstats/' + encodeURI(keywords) + '">' + keywords + '</a></h3>'));
+        newSection.append($('<h3>Search results for keywords <a href="/searchstats/' + encodeURI(keywords) + '" target="_blank">' + keywords + '</a></h3>'));
         newSection.append($('<h4>Flesch Reading Ease Index ' + projectsJson["flesch_index"] + ' & FKGL ' + projectsJson["FKGL"] + '</h4>'));
         newSection.append(resultTable);
       
@@ -39,7 +39,7 @@ function generateProjectsTable(projectsJson) {
 function generateProjectRow(id, project) {
     // Create a row for a project
     let row = $('<tr/>');
-    row.append($('<td/>').append($('<a href="/employer/' + project.owner_id + '">' + project.owner_id + '</a>')));
+    row.append($('<td/>').append($('<a href="/employer/' + project.owner_id + '" target="_blank">' + project.owner_id + '</a>')));
     row.append($('<td/>').append(project.submitdate));
     row.append($('<td/ class="projectTitle">').append(project.title));
 
@@ -51,7 +51,7 @@ function generateProjectRow(id, project) {
     }
 
     row.append($('<td/>').append(skillsContainer));
-    row.append($('<td/>').append($('<a href="/stats/' + id + '">View stats</a>')));
+    row.append($('<td/>').append($('<a href="/stats/' + id + '" target="_blank">View stats</a>')));
     row.append($('<td/>').append($('<a href="/readability/' + id + '" target="_blank">' + 'Readability' + '</a>')));
 
     return row;

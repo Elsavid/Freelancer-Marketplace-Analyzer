@@ -27,7 +27,7 @@ function generateProjectsTable(projectsJson) {
 
         // Create the new section that will display the search results
         newSection.append($('<h3>Search results for keywords <a href="/searchstats/' + encodeURI(keywords) + '">' + keywords + '</a></h3>'));
-        newSection.append($('<h4>Flesch Reading Ease Index ' + projectsJson["flesch_index"] + ' & FKGL ' + projects["FKGL"] + '</h4>'));
+        newSection.append($('<h4>Flesch Reading Ease Index ' + projectsJson["flesch_index"] + ' & FKGL ' + projectsJson["FKGL"] + '</h4>'));
         newSection.append(resultTable);
       
     } else {

@@ -58,7 +58,7 @@ public class ReadabilityActorTest {
                 ObjectNode responseForReadability = testProbe.expectMsgClass(ObjectNode.class);
                 String stringResult = responseForReadability.get("result").asText();
 
-                // Make sure the response contains the correct statistics
+                // Make sure the response contains the correct readability
                 assertTrue(stringResult.startsWith("<li>Flesh Reading Ease Index: " + 68.0 + "</li>"));
                 assertTrue(stringResult.contains("<li>Education level: "+ "8th grade" + "</li>"));
 
@@ -67,7 +67,7 @@ public class ReadabilityActorTest {
     }
 
     @Test
-    public void testIncorrectJsonRequest() {
+    public void testIncorrectRequest() {
 
         new TestKit(system) {
             {
@@ -76,10 +76,8 @@ public class ReadabilityActorTest {
                 final Props readabilityActorProp = ReadabilityActor.props(probeRef, apiService, readabilityService);
                 final ActorRef subject = system.actorOf(readabilityActorProp);
 
-                ObjectNode testData = Json.newObject()
-                        .put("anything", "wrong");
+                String testData = "wrong data";
                 subject.tell(testData, probeRef);
-
                 testProbe.expectNoMessage();
             }
         };

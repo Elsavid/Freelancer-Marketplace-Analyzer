@@ -26,6 +26,11 @@ public class ReadabilityActorTest {
     private ReadabilityService readabilityService;
     Application application;
 
+    /**
+     * Sets up test fixture
+     *
+     * @author Wenshu Li
+     */
     @Before
     public void setup() {
         system = ActorSystem.create();
@@ -36,12 +41,22 @@ public class ReadabilityActorTest {
         readabilityService = application.injector().instanceOf(ReadabilityService.class);
     }
 
+    /**
+     * Tears down test fixture
+     *
+     * @author Wenshu Li
+     */
     @After
     public void teardown() {
         TestKit.shutdownActorSystem(system);
         system = null;
     }
 
+    /**
+     * Tests the readability actor
+     *
+     * @author Wenshu Li
+     */
     @Test
     public void testProjectReadability(){
         new TestKit(system) {
@@ -66,6 +81,11 @@ public class ReadabilityActorTest {
         };
     }
 
+    /**
+     * Tests for incorrect type of message
+     *
+     * @author Wenshu Li
+     */
     @Test
     public void testIncorrectRequest() {
 

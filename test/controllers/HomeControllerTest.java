@@ -166,20 +166,21 @@ public class HomeControllerTest extends WithApplication {
      *
      * @author Wenshu Li
      */
-    //TODO..
-    //@Test
-
-//    public final void testReadability() {
-//        CompletionStage<Result> csResult = controller.readability("How are your bro? I'm fine thank you, and you?");
-//        csResult.whenComplete((r, e) -> {
-//            String parsedResult = Helpers.contentAsString(r);
-//            assertThat("Optional[text/html]", is(r.contentType().toString()));
-//            assertThat(parsedResult, containsString("Readability"));
-//        }).exceptionally(e -> {
-//            System.out.println(e);
-//            return null;
-//        });
-//    }
+    @Test
+    public final void testReadability() {
+        String result = contentAsString(controller.readability(33239791));
+        assertTrue(result.contains("<title>Readability</title>"));
+    }
+    /**
+     * Tests the Websocket connection for readabilitySocket
+     *
+     * @author Wenshu Li
+     */
+    @Test
+    public final void testReadabilitySocket(){
+        WebSocket result = controller.readabilitySocket();
+        assertEquals("play.mvc.WebSocket$1", result.getClass().getName());
+    }
 
 
     /**

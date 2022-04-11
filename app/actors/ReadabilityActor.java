@@ -25,6 +25,20 @@ public class ReadabilityActor extends AbstractActor {
         return Props.create(ReadabilityActor.class, out, apiService, readabilityService);
     }
 
+    /**
+     * Method Call before Actor is created and it registers with Supervisor Actor
+     */
+    @Override
+    public void preStart() {
+        context().actorSelection("/user/supervisorActor/")
+                .tell(new SupervisorActor.RegisterMsg(), self());
+    }
+
+    /**
+     * Readability actor constructor
+     *
+     * @author Wenshu Li
+     */
     @Inject
     private ReadabilityActor(ActorRef out, ApiServiceInterface apiService, ReadabilityService readabilityService){
         this.out=out;
@@ -32,6 +46,13 @@ public class ReadabilityActor extends AbstractActor {
         this.readabilityService=readabilityService;
         logger.info("New Readability Actor for WebSocket {}", out);
     }
+
+    /**
+     * Method called when Actor receives message
+     * @return Receive
+     *
+     * @author Wenshu Li
+     */
 
     @Override
     public Receive createReceive() {
@@ -41,6 +62,11 @@ public class ReadabilityActor extends AbstractActor {
                 .build();
     }
 
+    /**
+     * Method for getting project readability
+     * @param request JsonNode
+     * @author Wenshu Li
+     */
     private void getProjectReadability(JsonNode request){
         long projectId = request.get("projectId").asLong();
         apiService.getSingleProject(projectId)
@@ -48,6 +74,11 @@ public class ReadabilityActor extends AbstractActor {
                   .thenAccept(this::convertAndSend);
     }
 
+    /**
+     * Method called when Actor receives message
+     * @param readability Readability
+     * @author Wenshu Li
+     */
     private void convertAndSend(Readability readability){
         double fleschIndex = readability.getFleschIndex();
         String educationLevel = readability.getEducationLevel();

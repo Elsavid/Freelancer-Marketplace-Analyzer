@@ -2,7 +2,6 @@ package actors;
 
 import java.util.List;
 import java.util.concurrent.CompletionStage;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -14,9 +13,8 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import models.*;
+import models.Project;
 import services.ApiServiceInterface;
-import services.ReadabilityService;
 
 import static models.ProjectToJsonParser.convertToJson;
 
@@ -34,9 +32,8 @@ public class SkillActor extends AbstractActor {
     /**
      * Props creates the Actor and return Actor protocal
      *
-     * @param out                ActorRef of Actor
-     * @param apiService         ApiServiceInterface
-     * @param readabilityService ReadabilityService
+     * @param out        ActorRef of Actor
+     * @param apiService ApiServiceInterface
      * @return Props
      */
     public static Props props(ActorRef out, ApiServiceInterface apiService) {
@@ -44,11 +41,19 @@ public class SkillActor extends AbstractActor {
     }
 
     /**
+     * Method Call before Actor is created and it registers with Supervisor Actor
+     */
+    @Override
+    public void preStart() {
+        context().actorSelection("/user/supervisorActor/")
+                .tell(new SupervisorActor.RegisterMsg(), self());
+    }
+
+    /**
      * SkillActor constructor
      *
-     * @param out                ActorRef of Actor
-     * @param apiService         ApiServiceInterface
-     * @param readabilityService ReadabilityService
+     * @param out        ActorRef of Actor
+     * @param apiService ApiServiceInterface
      */
     @Inject
     public SkillActor(ActorRef out, ApiServiceInterface apiService) {

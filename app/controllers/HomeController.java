@@ -24,6 +24,7 @@ import play.mvc.Result;
 import play.mvc.WebSocket;
 import services.ApiServiceInterface;
 import services.ReadabilityService;
+import actors.SupervisorActor;
 
 @Singleton
 public class HomeController extends Controller {
@@ -40,6 +41,7 @@ public class HomeController extends Controller {
     public HomeController(ActorSystem actorSystem, Materializer materializer) {
         this.actorSystem = actorSystem;
         this.materializer = materializer;
+        actorSystem.actorOf(SupervisorActor.getProps(), "supervisorActor");
     }
 
     /**
@@ -98,7 +100,9 @@ public class HomeController extends Controller {
      *
      * @author Wenshu Li
      */
-    public Result readability(long projectId) {return ok(views.html.readability.render(projectId));}
+    public Result readability(long projectId) {
+        return ok(views.html.readability.render(projectId));
+    }
 
     /**
      * Creates the websocket connections for the readability request
@@ -108,14 +112,16 @@ public class HomeController extends Controller {
      * @author Wenshu Li
      */
     public WebSocket readabilitySocket() {
-        return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> ReadabilityActor.props(out, apiService, readabilityService), actorSystem, materializer));
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(
+                out -> ReadabilityActor.props(out, apiService, readabilityService), actorSystem, materializer));
     }
 
     /**
      * Renders the global words statistics page of the application (for a given
      * query)
      *
-     * @param encodedKeywords The keywords used for the query being analyzed (URI encoded)
+     * @param encodedKeywords The keywords used for the query being analyzed (URI
+     *                        encoded)
      * @return Play response and render of the global words statistics page
      *
      * @author Vincent Marechal
@@ -145,7 +151,8 @@ public class HomeController extends Controller {
      * @author Vincent Marechal
      */
     public WebSocket statsSocket() {
-        return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> StatsActor.props(out, apiService), actorSystem, materializer));
+        return WebSocket.Json.accept(
+                request -> ActorFlow.actorRef(out -> StatsActor.props(out, apiService), actorSystem, materializer));
     }
 
     /**

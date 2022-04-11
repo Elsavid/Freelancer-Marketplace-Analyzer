@@ -32,7 +32,8 @@ public class ReadabilityServiceTest {
         s2 = "What are you doing now?";
         readabilityService = new ReadabilityService();
         projects = Arrays.asList(
-                new Project(0, "", null, "", "", new ArrayList<>(), "Hello, how are you? I'm fine, and you? I'm pretty good. Okay, it's nice to talk to you, bye!"),
+                new Project(0, "", null, "", "", new ArrayList<>(),
+                        "Hello, how are you? I'm fine, and you? I'm pretty good. Okay, it's nice to talk to you, bye!"),
                 new Project(0, "", null, "", "", new ArrayList<>(), "What are you doing now?"));
     }
 
@@ -41,8 +42,6 @@ public class ReadabilityServiceTest {
      */
     @Test
     public void getAvgReadability() {
-        System.out.println(readabilityService.getAvgReadability(projects).getFleschIndex());
-        System.out.println(readabilityService.getAvgReadability(projects).getFKGL());
         assertEquals(0, Double.compare(119.5, readabilityService.getAvgReadability(projects).getFleschIndex()));
         assertEquals(0, Double.compare(-2.5, readabilityService.getAvgReadability(projects).getFKGL()));
     }
@@ -52,7 +51,7 @@ public class ReadabilityServiceTest {
      */
     @Test
     public void getReadabilityTest() {
-        //assertEquals(new Readability(),readabilityService.getReadability(s));
+        // assertEquals(new Readability(),readabilityService.getReadability(s));
         Readability r1 = readabilityService.getReadability("");
         assertEquals(999, r1.getFleschIndex());
         assertEquals(999, r1.getFKGL());

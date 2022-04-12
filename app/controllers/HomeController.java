@@ -37,10 +37,9 @@ public class HomeController extends Controller {
 
     /**
      * The HomeController constructor
-     * 
+     *
      * @param actorSystem  The default ActorSystem (from Play)
      * @param materializer Materializer for AkkaStreams
-     *
      * @author Whole group
      */
     @Inject
@@ -55,7 +54,6 @@ public class HomeController extends Controller {
      *
      * @param request The received HTTP request
      * @return Play response and render of the home page
-     *
      * @author Whole group
      */
     public Result index(Http.Request request) {
@@ -64,14 +62,12 @@ public class HomeController extends Controller {
 
     /**
      * Creates the websocket connections for the keywords search request
-     * 
+     *
      * @return websocket connection
-     * 
      * @author Yan Ren
      */
     public WebSocket searchSocket() {
-        return WebSocket.Json.accept(request -> ActorFlow
-                .actorRef(out -> SearchActor.props(out, apiService, readabilityService), actorSystem, materializer));
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> SearchActor.props(out, apiService, readabilityService), actorSystem, materializer));
     }
 
     /**
@@ -79,7 +75,6 @@ public class HomeController extends Controller {
      *
      * @param skill An skill id used for request query
      * @return Render of the skill page
-     *
      * @author Yan Ren
      */
     public Result skill(String skill) {
@@ -90,20 +85,17 @@ public class HomeController extends Controller {
      * Creates the websocket connections for the skills search feature
      *
      * @return websocket connection
-     *
      * @author Yan Ren
      */
     public WebSocket skillSocket() {
-        return WebSocket.Json.accept(request -> ActorFlow
-                .actorRef(out -> SkillActor.props(out, apiService), actorSystem, materializer));
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> SkillActor.props(out, apiService), actorSystem, materializer));
     }
 
     /**
      * Renders the readability page of application
-     * 
+     *
      * @param projectId The ID of the project to analyze
      * @return Render of the readability page
-     *
      * @author Wenshu Li
      */
     public Result readability(long projectId) {
@@ -114,12 +106,10 @@ public class HomeController extends Controller {
      * Creates the websocket connections for the readability request
      *
      * @return WebsocketConnection
-     *
      * @author Wenshu Li
      */
     public WebSocket readabilitySocket() {
-        return WebSocket.Json.accept(request -> ActorFlow.actorRef(
-                out -> ReadabilityActor.props(out, apiService, readabilityService), actorSystem, materializer));
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> ReadabilityActor.props(out, apiService, readabilityService), actorSystem, materializer));
     }
 
     /**
@@ -129,7 +119,6 @@ public class HomeController extends Controller {
      * @param encodedKeywords The keywords used for the query being analyzed (URI
      *                        encoded)
      * @return Play response and render of the global words statistics page
-     *
      * @author Vincent Marechal
      */
     public Result searchStats(String encodedKeywords) {
@@ -139,10 +128,9 @@ public class HomeController extends Controller {
 
     /**
      * Renders the words statistics page of the application (for a given project)
-     * 
+     *
      * @param projectId The ID of the project to analyze
      * @return Play response and render of the project words statistics page
-     *
      * @author Vincent Marechal
      */
     public Result stats(long projectId) {
@@ -153,22 +141,19 @@ public class HomeController extends Controller {
      * Creates the websocket connections for the words statistics request
      *
      * @return websocket connection
-     *
      * @author Vincent Marechal
      */
     public WebSocket statsSocket() {
-        return WebSocket.Json.accept(
-                request -> ActorFlow.actorRef(out -> StatsActor.props(out, apiService), actorSystem, materializer));
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> StatsActor.props(out, apiService), actorSystem, materializer));
     }
 
     /**
      * Creates the websocket connections for the employer profile request
      *
      * @return profileSocket connection
-     *
      * @author Haoyue Zhang
      */
-    public WebSocket profileSocket(){
+    public WebSocket profileSocket() {
         return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> ProfileActor.props(out, apiService), actorSystem, materializer));
 
     }
@@ -178,7 +163,6 @@ public class HomeController extends Controller {
      *
      * @param ownerId The employer id to be linked
      * @return Play response and render of the employer page
-     *
      * @author Haoyue Zhang
      */
     public Result employer(String ownerId) {

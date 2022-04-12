@@ -127,14 +127,8 @@ public class HomeControllerTest extends WithApplication {
         // Title and table are displayed
         assertTrue(parsedResult
                 .contains("<h1>Global words statistics for the search result using the keywords \"PHP\"</h1>"));
-
         // Javascript in views isn't executed during tests so we can't test the data inside the template here
         // but this is done through the tests of the StatsActor iteself
-        // assertTrue(parsedResult.contains("Number of appearances"));
-        // // Statistics are displayed
-        // assertTrue(parsedResult.contains("<tr><td>centers</td><td>2</td></tr>"));
-        // assertTrue(parsedResult.contains("<tr><td>room</td><td>1</td></tr>"));
-        // assertTrue(parsedResult.contains("<tr><td>fix</td><td>1</td></tr>"));
     }
 
     /**
@@ -151,14 +145,8 @@ public class HomeControllerTest extends WithApplication {
 
         // Title and table are displayed
         assertTrue(parsedResult.contains("<h1>Words statistics for project ID 33239791</h1>"));
-
         // Javascript in views isn't executed in tests so we can't test the data inside the template here
         // but this is done through the tests of the StatsActor iteself
-        // assertTrue(parsedResult.contains("Number of appearances"));
-        // // Statistics are displayed
-        // assertTrue(parsedResult.contains("<tr><td>with</td><td>1</td></tr>"));
-        // assertTrue(parsedResult.contains("<tr><td>in</td><td>1</td></tr>"));
-        // assertTrue(parsedResult.contains("<tr><td>platform</td><td>1</td></tr>"));
     }
 
     /**

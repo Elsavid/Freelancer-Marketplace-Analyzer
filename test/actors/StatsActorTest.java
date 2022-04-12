@@ -1,14 +1,11 @@
 package actors;
 
-import akka.actor.Actor;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.stream.Materializer;
 import akka.testkit.javadsl.TestKit;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import models.Project;
-import models.WordStatsProcessor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +14,6 @@ import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.Json;
 import services.ApiServiceInterface;
 import services.ApiServiceMock;
-import services.ReadabilityService;
 
 import static org.junit.Assert.assertTrue;
 import static play.inject.Bindings.bind;

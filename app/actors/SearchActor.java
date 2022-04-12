@@ -122,8 +122,7 @@ public class SearchActor extends AbstractActorWithTimers {
     }
 
     /**
-     * Converts the Actor's cache to a json object for easy transfer to the
-     * front-end
+     * Converts the Actor's cache to a json object for easy transfer to the front-end
      *
      * @return A json object version of the Actor's cache
      */

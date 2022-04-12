@@ -9,13 +9,11 @@ import java.util.concurrent.CompletionStage;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import actors.ReadabilityActor;
-import actors.SearchActor;
-import actors.StatsActor;
-import actors.SkillActor;
+import actors.*;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
 import models.Project;
+import org.springframework.context.annotation.Profile;
 import play.libs.streams.ActorFlow;
 import play.libs.ws.WSClient;
 import play.mvc.Controller;
@@ -163,6 +161,18 @@ public class HomeController extends Controller {
     }
 
     /**
+     * Creates the websocket connections for the employer profile request
+     *
+     * @return profileSocket connection
+     *
+     * @author Haoyue Zhang
+     */
+    public WebSocket profileSocket(){
+        return WebSocket.Json.accept(request -> ActorFlow.actorRef(out -> ProfileActor.props(out, apiService), actorSystem, materializer));
+
+    }
+
+    /**
      * Renders the employer page of the application
      *
      * @param ownerId The employer id to be linked
@@ -170,8 +180,7 @@ public class HomeController extends Controller {
      *
      * @author Haoyue Zhang
      */
-    public CompletionStage<Result> employer(String ownerId) {
-        return apiService.getUserInfo(ownerId)
-                .thenApplyAsync(owner -> ok(views.html.employer.render(owner, owner.projects)));
+    public Result employer(String ownerId) {
+        return ok(views.html.employer.render(ownerId));
     }
 }

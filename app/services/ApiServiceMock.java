@@ -120,19 +120,30 @@ public class ApiServiceMock implements ApiServiceInterface {
     }
 
     /**
-     * Placeholder mock function, not used in testing
+     * Mocks an HTTP request to the API to get user info  based on its ID and then convert to owner model
+     *
+     * @param owner_id The ID of the employer
+     * @return A CompletionStage object containing a Owner object
+     * @author Haoyue Zhang
      */
     @Override
     public CompletionStage<Owner> getUserInfo(String owner_id) {
-       CompletableFuture<Owner> result = new CompletableFuture<>();
-//        try {
-//            Path fileName1 = Paths.get("./test/resources/getOwner.json");
-//            Path fileName2 = Paths.get("./test/resources/getOwnerProjects.json");
-//            String jsonString1 = Files.readAllLines(fileName1, Charset.forName("ISO-8859-1")).stream()
-//                    .collect(Collectors.joining());
-//            String jsonString2 = Files.readAllLines(fileName1, Charset.forName("ISO-8859-1")).stream()
-//                    .collect(Collectors.joining());
+        CompletableFuture<Owner> result = new CompletableFuture<>();
+        Owner owner = null;
+        try {
+            Path fileName1 = Paths.get("./test/resources/getOwner.json");
+            Path fileName2 = Paths.get("./test/resources/getOwnerProjects.json");
+            String jsonString1 = Files.readAllLines(fileName1, Charset.forName("ISO-8859-1")).stream()
+                    .collect(Collectors.joining());
+            String jsonString2 = Files.readAllLines(fileName2, Charset.forName("ISO-8859-1")).stream()
+                    .collect(Collectors.joining());
 
-       return result;
+            owner = new Owner(jsonString1,jsonString2);
+            result.complete(owner);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

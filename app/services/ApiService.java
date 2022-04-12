@@ -92,8 +92,8 @@ public class ApiService implements ApiServiceInterface {
      * projects
      *
      * @param owner_id The ID of the employer
-     * @return A CompletionStage Object containing an Owner object
      * @author Haoyue Zhang
+     * @return A CompletionStage object containing a Owner objects cantains userinfo and project lists
      */
     public CompletionStage<Owner> getUserInfo(String owner_id) {
         String url1 = userQuery + owner_id;

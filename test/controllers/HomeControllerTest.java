@@ -182,6 +182,18 @@ public class HomeControllerTest extends WithApplication {
         assertEquals("play.mvc.WebSocket$1", result.getClass().getName());
     }
 
+    /**
+     * Tests the Websocket connection for profileSocket
+     *
+     * @author Haoyue Zhang
+     */
+    @Test
+    public final void testProfileSocket() {
+        RequestBuilder requestBuilder = Helpers.fakeRequest();
+        WebSocket result = controller.profileSocket();
+
+        assertEquals("play.mvc.WebSocket$1", result.getClass().getName());
+    }
 
     /**
      * Tests the employer controller
@@ -189,19 +201,17 @@ public class HomeControllerTest extends WithApplication {
      * @author Haoyue Zhang
      */
     @Test
-    public final void employerTest() {
-        CompletionStage<Result> employerResult = controller.employer("61317541");
-        employerResult.whenComplete((r, e) -> {
-            String parsedResult = Helpers.contentAsString(r);
-            assertThat("Optional[text/html]", is(r.contentType().toString()));
-            assertTrue(parsedResult.contains("<h1>Information of employer 61317541</h1>"));
-            assertTrue(parsedResult.contains("<tr><td>username</td><td>KashishD4761</td></tr>"));
+    public final void testEmployer() {
+        Result profileResult = controller.employer("123");
+        try {
+            assertEquals(OK, profileResult.status());
+            String parsedResult = contentAsString(profileResult);
 
-        }).exceptionally(e -> {
+            assertThat("Optional[text/html]", is(profileResult.contentType().toString()));
+            assertTrue(parsedResult.contains("<title>employer</title>"));
+        } catch (Exception e) {
             System.out.println(e);
-            return null;
-        });
-
+        }
     }
 
     /**

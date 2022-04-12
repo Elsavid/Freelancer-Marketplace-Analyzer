@@ -1,72 +1,108 @@
-@(owner: Owner,projects:List[Project])
+@(id: String)
+@import java.util.List;
+@import models.Project;
+<!DOCTYPE html>
+
 <html>
-
-<head>
-    <title>Employer</title>
     <style>
-        table,td{
-            border: 2px solid;
-            border-collapse: collapse;
-            width: 70%;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: center
+    table,
+    th,
+    td {
+        border: 1px solid black;
+        margin-right: auto;
+        margin-left: auto;
+        text-align: center
+    }
 
-        }
-        body{
-            margin-right: auto;
-            text-align: center
-        }
-        #section2{
-            padding-top: 30px;
-            padding-bottom: 100px;
-        }
-
-
+    body{
+        margin-right: auto;
+        text-align: center
+    }
     </style>
-</head>
 
-<body>
-    <h1>Information of employer @owner.Id</h1>
-    <section>
-    <h2>Personal information</h2>
-    <table >
-        <tr>
-            <th>attribute</th>
-            <th>value</th>
-        </tr>
-        @for(s<-owner.userInfnormation){ <tr>
-            <td>@s._1 </td>
-            <td>@s._2.replaceAll("^\"|\"$", "") </td>
-            </tr>
+    <head>
+        <title>employer</title>
+
+        <script type='text/javascript' src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
+    </head>
+
+    <body>
+        <section>
+            <h2>Employer Info of @id</h2>
+        </section>
+        <section>
+            <div id="resultList" class="centeredBlock" class="userTable">
+                    <!-- Place holder for tables -->
+            </div>
+        </section>
+    </body>
+    <script>
+    let ownerId = window.location.pathname.split("/").pop();
+
+    const socket = new WebSocket('ws://localhost:9000/profileSocket');
+
+    socket.addEventListener('open', function (event) {
+        socket.send(JSON.stringify({ ownerId: ownerId }));
+
+    });
+
+    socket.addEventListener('message', function (event) {
+        data = JSON.parse(event.data);
+        $('#resultList').prepend(displayResult(event.data));
+    });
+
+    function displayResult(data) {
+
+        let resp = JSON.parse(data);
+        let projects = resp["projects"];
+        let userInfo = resp["userInfo"];
+
+        let newSection = $('<div class="centeredBlock"/>');
+
+        let keys = Object.keys(userInfo);
+        let userTable = '<table ><tr><th>Attribute</th><th>Value</th></tr>';
+        for (let i = 0; i < keys.length; i++) {
+            console.log(userInfo[keys[i]]);
+            userTable += "<tr><td>" + keys[i] + "</td><td>" + userInfo[keys[i]] + "</td></tr>";
+        }
+        userTable += "</table>";
+        newSection.append(userTable);
+        let space = $('<h2>Project Lists</h2>');
+        newSection.append(space);
+        console.log(data);
+        if (Object.keys(projects).length > 0) {
+
+            let resultTable = $('<table class="projectTable"><thead><tr><th>Owner</th><th>Submit date</th><th>Title</th><th>Skills</th></tr></thead>');
+
+            for (let id of Object.keys(projects)) {
+
+                let project = projects[id];
+
+                // Create a row for a project
+                let row = $('<tr/>');
+                row.append($('<td/>').append($('<a href="/employer/' + project.owner_id + '">' + project.owner_id + '</a>')));
+                row.append($('<td/>').append(project.submitdate));
+                row.append($('<td/ class="projectTitle">').append(project.title));
+
+                let skillsContainer = $('<table class="centeredBlock skillsTable"/>');
+                let ref = project.skills;
+                for (let i = 0; i < ref.length; i++) {
+                    let skill = ref[i];
+                    skillsContainer.append($('<tr/>').append($('<td/>').append($('<a href="/skill/' + skill.id + '" target="_blank">' + skill.name + '</a>'))));
+                }
+
+                row.append($('<td/>').append(skillsContainer));
+                resultTable.append(row);
             }
-    </table>
-    </section>
-    <section id="section2">
-    <h2>Projects list</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Submit Date</th>
-            <th>Title</th>
-            <th>Skills</th>
-        </tr>
-        @for(project<-projects) { <tr>
-            <td>@project.getOwnerId</td>
-            <td>@project.getSubmitDate</td>
-            <td>@project.getTitle.replaceAll("^\"|\"$", "")</td>
-            <td>
-            <table id = "skills list" >
-                <tr>
-            @for(skill <- project.getSkills) { <td>@skill.getName.replaceAll("^\"|\"$", "")</td>
-            }
-                </tr>
-            </table>
-            </td>
-            </tr>
-            }
-    </table>
-    </section>
-</body>
+            resultTable.append($('</table>'));
+
+            // Create the new section that will display the search results
+            newSection.append(resultTable);
+        } else {
+            newSection.append($('<h3>No project was found using keywords "' + resp.keywords + '".</h3>'));
+        }
+        return newSection;
+    }
+</script>
 
 </html>

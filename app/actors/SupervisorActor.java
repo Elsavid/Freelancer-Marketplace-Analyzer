@@ -65,7 +65,6 @@ public class SupervisorActor extends AbstractActor {
      */
     @Override
     public Receive createReceive() {
-        // TODO Auto-generated method stub
         return receiveBuilder()
                 .match(RegisterMsg.class, msg -> register(sender()))
                 .match(DeRegister.class, msg -> deregister(sender()))
@@ -74,6 +73,7 @@ public class SupervisorActor extends AbstractActor {
 
     /**
      * Removes an Actor from the list of Actors supervised by this Actor
+     * 
      * @param sender The ActorRef of the Actor to remove
      * @return True if the Actor was removed
      */
@@ -84,6 +84,7 @@ public class SupervisorActor extends AbstractActor {
 
     /**
      * Adds an Actor to the list of Actors supervised by this Actor
+     * 
      * @param actorRef The ActorRef of the Actor to add
      */
     private void register(ActorRef actorRef) {

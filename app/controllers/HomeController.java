@@ -37,7 +37,8 @@ public class HomeController extends Controller {
 
     /**
      * The HomeController constructor
-     * @param actorSystem The default ActorSystem (from Play)
+     * 
+     * @param actorSystem  The default ActorSystem (from Play)
      * @param materializer Materializer for AkkaStreams
      *
      * @author Whole group

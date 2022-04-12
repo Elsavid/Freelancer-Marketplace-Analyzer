@@ -37,20 +37,23 @@ public class ReadabilityActor extends AbstractActor {
     /**
      * Readability actor constructor
      *
+     * @param out
+     * @param apiService
+     * @param readabilityService
      * @author Wenshu Li
      */
     @Inject
-    private ReadabilityActor(ActorRef out, ApiServiceInterface apiService, ReadabilityService readabilityService){
-        this.out=out;
-        this.apiService=apiService;
-        this.readabilityService=readabilityService;
+    private ReadabilityActor(ActorRef out, ApiServiceInterface apiService, ReadabilityService readabilityService) {
+        this.out = out;
+        this.apiService = apiService;
+        this.readabilityService = readabilityService;
         logger.info("New Readability Actor for WebSocket {}", out);
     }
 
     /**
      * Method called when Actor receives message
+     * 
      * @return Receive
-     *
      * @author Wenshu Li
      */
 
@@ -64,27 +67,29 @@ public class ReadabilityActor extends AbstractActor {
 
     /**
      * Method for getting project readability
+     * 
      * @param request JsonNode
      * @author Wenshu Li
      */
-    private void getProjectReadability(JsonNode request){
+    private void getProjectReadability(JsonNode request) {
         long projectId = request.get("projectId").asLong();
         apiService.getSingleProject(projectId)
-                  .thenApply(p->readabilityService.getReadability(p.getPreviewDescription()))
-                  .thenAccept(this::convertAndSend);
+                .thenApply(p -> readabilityService.getReadability(p.getPreviewDescription()))
+                .thenAccept(this::convertAndSend);
     }
 
     /**
      * Method called when Actor receives message
+     * 
      * @param readability Readability
      * @author Wenshu Li
      */
-    private void convertAndSend(Readability readability){
+    private void convertAndSend(Readability readability) {
         double fleschIndex = readability.getFleschIndex();
         String educationLevel = readability.getEducationLevel();
         ObjectNode jsonResponse = Json.newObject();
         String html = "<li>Flesh Reading Ease Index: " + fleschIndex + "</li>";
-        html+="<li>Education level: "+ educationLevel + "</li>";
+        html += "<li>Education level: " + educationLevel + "</li>";
         jsonResponse.put("result", html);
         out.tell(jsonResponse, self());
     }

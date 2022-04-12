@@ -25,9 +25,9 @@ import static models.ProjectToJsonParser.convertToJson;
  */
 public class SkillActor extends AbstractActor {
 
+    ApiServiceInterface apiService;
     private LoggingAdapter logger = Logging.getLogger(getContext().getSystem(), this);
     private final ActorRef out;
-    ApiServiceInterface apiService;
 
     /**
      * Props creates the Actor and return Actor protocol

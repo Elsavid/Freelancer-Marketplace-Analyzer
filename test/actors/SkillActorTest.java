@@ -59,7 +59,7 @@ public class SkillActorTest {
      * @author Yan Ren
      */
     @Test
-    public void testSearchActor() {
+    public void testSkillActor() {
 
         new TestKit(system) {
             {

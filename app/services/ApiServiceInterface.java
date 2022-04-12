@@ -24,8 +24,9 @@ public interface ApiServiceInterface {
     /**
      * Sends an HTTP request to the API to get a list of projects based on keywords
      *
-     * @param query The query to use for the request (keywords)
-     * @param limit The maximum number of projects to return
+     * @param query    The query to use for the request (keywords)
+     * @param limit    The maximum number of projects to return
+     * @param isUpdate Cache flag
      * @return A CompletionStage object containing a Project objects list
      * @author Whole group
      */
@@ -83,7 +84,8 @@ public interface ApiServiceInterface {
             List<Project> projects = new ArrayList<>();
             String status = ((JsonNode) response).get("status").asText();
             if ("success".equals(status)) {
-                ((JsonNode) response).get("result").get("projects").forEach(item -> projects.add(createProjectFromJsonNode(item)));
+                ((JsonNode) response).get("result").get("projects")
+                        .forEach(item -> projects.add(createProjectFromJsonNode(item)));
             }
             return projects;
         });
@@ -97,7 +99,11 @@ public interface ApiServiceInterface {
      * @author Whole group
      */
     static Project createProjectFromJsonNode(JsonNode projectJson) {
-        Project p = new Project(projectJson.get("id").asInt(), projectJson.get("owner_id").asText(), dateFormat.format(new Date(projectJson.get("submitdate").asLong() * 1000L)), StringUtils.capitalize(projectJson.get("title").asText().toLowerCase()), projectJson.get("type").asText().toLowerCase(), new ArrayList<>(), projectJson.get("preview_description").asText());
+        Project p = new Project(projectJson.get("id").asInt(), projectJson.get("owner_id").asText(),
+                dateFormat.format(new Date(projectJson.get("submitdate").asLong() * 1000L)),
+                StringUtils.capitalize(projectJson.get("title").asText().toLowerCase()),
+                projectJson.get("type").asText().toLowerCase(), new ArrayList<>(),
+                projectJson.get("preview_description").asText());
         for (JsonNode skill : projectJson.get("jobs")) {
             p.addSkill(new Skill(skill.get("id").asInt(), skill.get("name").asText()));
         }

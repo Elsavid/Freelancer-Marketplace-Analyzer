@@ -39,7 +39,6 @@ public class SearchActor extends AbstractActorWithTimers {
     ReadabilityService readabilityService;
     private Map<String, List<Project>> projectCache;
 
-
     /**
      * Tick signal used for updates
      */
@@ -122,15 +121,15 @@ public class SearchActor extends AbstractActorWithTimers {
         }).thenAcceptAsync(response -> out.tell(response, self()));
     }
 
-
     /**
-     * Converts the Actor's cache to a json object for easy transfer to the front-end
+     * Converts the Actor's cache to a json object for easy transfer to the
+     * front-end
      *
      * @return A json object version of the Actor's cache
      */
     private ObjectNode convertCacheToJson() {
         ObjectNode response = Json.newObject();
-        for (Entry entry: projectCache.entrySet()) {
+        for (Entry entry : projectCache.entrySet()) {
 
             List<Project> projectList = (List<Project>) entry.getValue();
             ObjectNode projectsNode = convertToJson(projectList);
@@ -155,7 +154,7 @@ public class SearchActor extends AbstractActorWithTimers {
         // Wait for a first search to be done
         if (!projectCache.isEmpty()) {
             // Refresh the results for all requests in the cache
-            for (String keywords: projectCache.keySet()) {
+            for (String keywords : projectCache.keySet()) {
                 ObjectNode request = Json.newObject().put("keywords", keywords);
                 onSendMessage(request);
             }
@@ -163,9 +162,10 @@ public class SearchActor extends AbstractActorWithTimers {
     }
 
     /**
-     * Takes a list of Project objects, filters out the ones already processed previously
-     * and limits the final list to 10 elements
-     *
+     * Takes a list of Project objects, filters out the ones already processed
+     * previously and limits the final list to 10 elements
+     * 
+     * @param keywords
      * @param projectList The list of projects to filter
      * @return A filtered list of Project objects
      */
@@ -174,7 +174,8 @@ public class SearchActor extends AbstractActorWithTimers {
                 .filter(p -> {
                     boolean isDuplicate = false;
                     if (projectCache.keySet().contains(keywords)) {
-                        isDuplicate = projectCache.get(keywords).stream().map(Project::getId).anyMatch(id -> id.equals(p.getId()));
+                        isDuplicate = projectCache.get(keywords).stream().map(Project::getId)
+                                .anyMatch(id -> id.equals(p.getId()));
                     }
                     return !isDuplicate;
                 })

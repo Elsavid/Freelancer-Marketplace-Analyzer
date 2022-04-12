@@ -73,8 +73,7 @@ public class SkillActor extends AbstractActor {
     private void onSendMessage(JsonNode request) {
         CompletionStage<List<Project>> projects = apiService.getSkill(request.get("skill").asText());
         projects.thenApply(projectList -> {
-            ObjectNode response = convertToJson(projectList);
-            return response;
+            return convertToJson(projectList);
         }).thenAcceptAsync(response -> out.tell(response, self()));
     }
 

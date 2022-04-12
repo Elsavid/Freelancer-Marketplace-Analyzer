@@ -63,14 +63,17 @@ public class ProfileActor extends AbstractActor {
      *                request
      */
     private void onSendMessage(JsonNode request) {
-        CompletionStage<Owner> owner = apiService.getUserInfo(request.get("ownerId").asText());
-        owner.thenAcceptAsync((o)->{
-            ObjectNode profile = convertToJson(o.projects);
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode userInfo = mapper.valueToTree(o.userInfnormation);
-            profile.set("userInfo",userInfo);
-            out.tell(profile, self());
-        });}
+        if(request.has("ownerId")){
+            CompletionStage<Owner> owner = apiService.getUserInfo(request.get("ownerId").asText());
+            owner.thenAcceptAsync((o)->{
+                ObjectNode profile = convertToJson(o.projects);
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode userInfo = mapper.valueToTree(o.userInfnormation);
+                profile.set("userInfo",userInfo);
+                out.tell(profile, self());
+            });
+        }
+    }   
 
     /**
      * Method called when Actor receives message

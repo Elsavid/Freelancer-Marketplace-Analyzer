@@ -57,12 +57,6 @@ Navigate to project folder, run `sbt run`. After the message `Server started, ..
 
 * [Play](https://www.playframework.com/) - The web framework used
 
-## Authors
-
-* **[Haoyue Zhang](https://github.com/Elsavid)** - *Employer profile*
-* **[Vincent Maréchal](https://github.com/Vncntmrchl)** - *Word stats*
-* **[Yan Ren](https://github.com/yan-ren)** - *Skills*
-* **[Wenshu Li](https://github.com/fallinlovewitheattingshit)** - *Description readability*
 
 ## Documentation
 

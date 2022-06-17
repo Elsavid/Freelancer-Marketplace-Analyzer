@@ -58,9 +58,6 @@ Navigate to project folder, run `sbt run`. After the message `Server started, ..
 * [Play](https://www.playframework.com/) - The web framework used
 
 
-## Documentation
-
-Design documentation is avaliable on [this](https://drive.google.com/drive/folders/1b6DG6JRsUpQ4E6mYhlDHLio8DEATh4kr?usp=sharing) shared folder
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
